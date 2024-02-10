@@ -7,17 +7,26 @@
 
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "struct.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 
 #ifndef MINISHELL1_H_
     #define MINISHELL1_H_
+    #define MAXLEN  100
 
 int get_input_user(void);
 void fill_struct(commands_t **commands);
 void check_correct_command(int *cmds, char *str, commands_t *commands);
 char *get_pwd_file(char *src);
+char **my_str_to_word_array(char const *str);
+int start_commands(char **data, int cmds, commands_t *commands);
+int non_interactive(void);
+int execution_process(char **data);
+int start_commands_non_interactive(char **data, int cmds,
+    commands_t *commands);
 
 #endif /* !MINISHELL1 */

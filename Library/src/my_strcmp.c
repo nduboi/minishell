@@ -10,6 +10,8 @@
 
 int my_strcmp(const char *first, const char *second)
 {
+    if (!first || !second)
+        return -1;
     if (my_strlen(first) != my_strlen(second))
         return -1;
     for (int i = 0; first[i]; i++) {

@@ -15,7 +15,7 @@ static void free_obj(char **data, char *str)
     return;
 }
 
-int get_input_user(void)
+int get_input_user(char **env)
 {
     char *str;
     char **data;
@@ -31,9 +31,9 @@ int get_input_user(void)
         data = my_str_to_word_array(str);
         if (my_strcmp(data[0], "exit") == 0)
             return 0;
-        check_correct_command(&cmds, data[0], commands);
+        check_correct_command(&cmds, data, commands);
         if (cmds != 0)
-            start_commands(data, cmds, commands);
+            start_commands(data, cmds, commands, &env);
         free_obj(data, str);
     }
     return 0;

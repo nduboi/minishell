@@ -37,5 +37,6 @@ int main_setenv(int ac, char **av, char ***env);
 char *get_env(char *src, char **env);
 int get_line_env(char *name, char **env);
 void print_env(char **env);
+char **my_table_cpy(char **src);
 
 #endif /* !MINISHELL1 */

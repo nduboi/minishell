@@ -29,7 +29,7 @@ static char *put_new_env(char *name, char *value)
     return result;
 }
 
-static char **my_table_cpy(char **src)
+char **my_table_cpy(char **src)
 {
     char **result = NULL;
     int array_len = 0;

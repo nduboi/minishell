@@ -8,14 +8,29 @@
 #include "minishell1.h"
 #include "library.h"
 
-int execution_process(char **data)
+int execute_in_commands_struct(commands_t *commands, char **data, char **env)
 {
-    char *env[] = {"PATH=/bin:/usr/bin", NULL};
+    commands_t *elements = commands;
 
-    if (execve(get_pwd_file(data[0]), data, env) == -1 &&
-        execve(data[0], data, env) == -1) {
-        perror("execve");
-        return 1;
+    while (elements) {
+        if (my_strcmp(data[0], elements->name) == 0) {
+            exit(elements->fct(my_array_len(data), data, env));
+        }
+        elements = elements->next;
+    }
+    return 1;
+}
+
+int execution_process(char **data, int cmds, commands_t *commands, char **env)
+{
+    if (cmds == 2) {
+        if (execve(get_pwd_file(data[0]), data, env) == -1 &&
+            execve(data[0], data, env) == -1) {
+            perror("execve");
+            return 1;
+        }
+    } else {
+        execute_in_commands_struct(commands, data, env);
     }
     return 0;
 }
@@ -37,17 +52,15 @@ static int wait_pid_fork(pid_t pid)
     return status;
 }
 
-int start_commands(char **data, int cmds, commands_t *commands)
+int start_commands(char **data, int cmds, commands_t *commands, char **env)
 {
     pid_t pid = fork();
 
-    if (commands)
-        commands = NULL;
-    if (cmds == 2) {
+    if (cmds == 2 || cmds == 1) {
         if (pid == -1)
             error_pid();
         if (pid == 0) {
-            execution_process(data);
+            execution_process(data, cmds, commands, env);
         } else {
             wait_pid_fork(pid);
         }

@@ -8,12 +8,11 @@
 #include "minishell1.h"
 #include "library.h"
 
-int start_commands_non_interactive(char **data, int cmds, commands_t *commands)
+int start_commands_non_interactive(char **data, int cmds, commands_t *commands,
+    char **env)
 {
-    if (commands)
-        commands = NULL;
-    if (cmds == 2) {
-        execution_process(data);
+    if (cmds == 2 || cmds == 1) {
+        execution_process(data, cmds, commands, env);
     }
     return 0;
 }

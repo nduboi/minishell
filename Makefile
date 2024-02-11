@@ -16,6 +16,8 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/minishell1/start_comands.c	\
 		src/minishell1/start_comands_no_interactive.c	\
 		src/minishell1/non_interactive.c	\
+		src/cd/main_cd.c	\
+		src/env/main_env.c	\
 
 FILE_MAIN =	src/main.c	\
 

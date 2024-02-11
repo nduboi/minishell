@@ -24,20 +24,32 @@ int check_internal_commands(char *src, int *cmds)
     return 1;
 }
 
-void check_correct_command(int *cmds, char *str, commands_t *commands)
+static void set_function(char **data, commands_t **elements)
+{
+    if (my_strcmp(data[0], "cd") == 0)
+        (*elements)->fct = main_cd;
+    if (my_strcmp(data[0], "env") == 0)
+        (*elements)->fct = main_env;
+    return;
+}
+
+void check_correct_command(int *cmds, char **data, commands_t *commands)
 {
     commands_t *elements = commands;
 
-    if (!str)
+    if (!data)
+        exit(0);
+    if (!data[0])
         exit(0);
     while (elements) {
-        if (my_strcmp(str, elements->name) == 0) {
+        if (my_strcmp(data[0], elements->name) == 0) {
+            set_function(data, &elements);
             *cmds = 1;
             return;
         }
         elements = elements->next;
     }
-    if (check_internal_commands(str, cmds) == 1)
+    if (check_internal_commands(data[0], cmds) == 1)
         return;
     *cmds = 0;
     write(2, "No commands found\n", 19);

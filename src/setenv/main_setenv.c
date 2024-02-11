@@ -65,7 +65,6 @@ static char **modify_env_file(char **env, char *name, char *value)
     char **result = NULL;
     int nbr_line = 0;
 
-    my_putchar('e');
     if (env && name && value) {
         nbr_line = get_line_env(name, my_table_cpy(env));
         env[nbr_line] = put_new_env(name, value);

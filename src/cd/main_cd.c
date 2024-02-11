@@ -21,8 +21,7 @@ static int go_folder(char *src, char ***env)
     if (opendir(src) == NULL) {
         strerror(ENOENT);
         return 84;
-    }
-    else {
+    } else {
         if (chdir(src) == -1) {
             strerror(errno);
             return 84;

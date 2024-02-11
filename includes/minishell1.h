@@ -25,13 +25,17 @@ void fill_struct(commands_t **commands);
 void check_correct_command(int *cmds, char **data, commands_t *commands);
 char *get_pwd_file(char *src);
 char **my_str_to_word_array(char const *str);
-int start_commands(char **data, int cmds, commands_t *commands, char **env);
+int start_commands(char **data, int cmds, commands_t *commands, char ***env);
 int non_interactive(char **env);
-int execution_process(char **data, int cmds, commands_t *commands, char **env);
-int start_commands_non_interactive(char **data, int cmds,
-    commands_t *commands, char **env);
-int main_cd(int ac, char **av, char **env);
-int main_env(int ac, char **av, char **env);
+int execution_process(char **data, int cmds, commands_t *commands,
+    char ***env);
+int start_commands_non_interactive(char **data, int cmds, commands_t *commands,
+    char ***env);
+int main_cd(int ac, char **av, char ***env);
+int main_env(int ac, char **av, char ***env);
+int main_setenv(int ac, char **av, char ***env);
 char *get_env(char *src, char **env);
+int get_line_env(char *name, char **env);
+void print_env(char **env);
 
 #endif /* !MINISHELL1 */

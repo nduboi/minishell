@@ -19,5 +19,5 @@ char *get_env(char *src, char **env)
             return result;
         }
     }
-    return result;
+    return NULL;
 }

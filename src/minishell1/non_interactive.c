@@ -23,7 +23,7 @@ int non_interactive(char **env)
         return 0;
     check_correct_command(&cmds, data, commands);
     if (cmds != 0)
-        cmds = start_commands_non_interactive(data, cmds, commands, env);
+        cmds = start_commands_non_interactive(data, cmds, commands, &env);
     free(data);
     return cmds;
 }

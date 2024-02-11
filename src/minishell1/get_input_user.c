@@ -33,7 +33,7 @@ int get_input_user(char **env)
             return 0;
         check_correct_command(&cmds, data, commands);
         if (cmds != 0)
-            start_commands(data, cmds, commands, env);
+            start_commands(data, cmds, commands, &env);
         free_obj(data, str);
     }
     return 0;

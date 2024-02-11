@@ -62,31 +62,25 @@ char **realloc_env(char **env, int nbr_moreline, char *name, char *value)
 
 static char **modify_env_file(char **env, char *name, char *value)
 {
-    char **result = NULL;
     int nbr_line = 0;
 
-    if (env && name && value) {
-        nbr_line = get_line_env(name, my_table_cpy(env));
-        env[nbr_line] = put_new_env(name, value);
-        return env;
-    }
-    return result;
+    nbr_line = get_line_env(name, my_table_cpy(env));
+    env[nbr_line] = put_new_env(name, value);
+    return env;
 }
 
 static char **add_value_in_env(char **av, char **env)
 {
-    if (av[1] && av[2]) {
-        if (get_env(av[1], my_table_cpy(env)) == NULL)
-            env = realloc_env(env, 1, av[1], av[2]);
-        else
-            env = modify_env_file(env, av[1], av[2]);
-    }
+    if (get_env(av[1], my_table_cpy(env)) == NULL)
+        env = realloc_env(env, 1, av[1], av[2]);
+    else
+        env = modify_env_file(env, av[1], av[2]);
     return env;
 }
 
 int main_setenv(int ac, char **av, char ***env)
 {
-    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env)) {
+    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) && av[1] && av[2]) {
         (*env) = add_value_in_env(av, (*env));
     } else
         return 84;

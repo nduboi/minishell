@@ -14,11 +14,13 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
 
 #ifndef MINISHELL1_H_
     #define MINISHELL1_H_
     #define MAXLEN  100
+    #define BUFFER_SIZE 300
 
 int get_input_user(char **env);
 void fill_struct(commands_t **commands);
@@ -38,5 +40,6 @@ char *get_env(char *src, char **env);
 int get_line_env(char *name, char **env);
 void print_env(char **env);
 char **my_table_cpy(char **src);
+char **add_value_in_env(char **av, char **env);
 
 #endif /* !MINISHELL1 */

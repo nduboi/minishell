@@ -69,7 +69,7 @@ static char **modify_env_file(char **env, char *name, char *value)
     return env;
 }
 
-static char **add_value_in_env(char **av, char **env)
+char **add_value_in_env(char **av, char **env)
 {
     if (get_env(av[1], my_table_cpy(env)) == NULL)
         env = realloc_env(env, 1, av[1], av[2]);

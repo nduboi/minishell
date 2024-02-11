@@ -80,7 +80,8 @@ static char **add_value_in_env(char **av, char **env)
 
 int main_setenv(int ac, char **av, char ***env)
 {
-    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) && av[1] && av[2]) {
+    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
+        av[1] && av[2]) {
         (*env) = add_value_in_env(av, (*env));
     } else
         return 84;

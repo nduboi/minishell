@@ -18,6 +18,7 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/minishell1/non_interactive.c	\
 		src/cd/main_cd.c	\
 		src/env/main_env.c	\
+		src/env/get_env.c	\
 
 FILE_MAIN =	src/main.c	\
 

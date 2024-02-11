@@ -19,10 +19,8 @@ static int go_folder (char *src)
 
 int main_cd(int ac, char **av, char **env)
 {
-    if (env != NULL)
-        env = NULL;
     if (ac == 1 && my_strcmp(av[0], "cd") == 0) {
-        chdir(getenv("HOME"));
+        chdir(get_env("HOME", env));
         return 0;
     }
     if (ac == 2 && my_strcmp(av[0], "cd") == 0) {

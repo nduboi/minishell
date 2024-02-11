@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "struct.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -31,5 +32,6 @@ int start_commands_non_interactive(char **data, int cmds,
     commands_t *commands, char **env);
 int main_cd(int ac, char **av, char **env);
 int main_env(int ac, char **av, char **env);
+char *get_env(char *src, char **env);
 
 #endif /* !MINISHELL1 */

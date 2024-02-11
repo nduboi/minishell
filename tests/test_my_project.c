@@ -241,3 +241,56 @@ Test(my_table_cpy, my_table_cpy2, .init = redirect_all_std)
     print_env(cpy_table);
     cr_assert_stdout_eq_str("2coucou\ntests\n");
 }
+
+Test(main_cd, main_cd1, .init = redirect_all_std)
+{
+    char **av = malloc(sizeof(char *) * 2);
+    av[0] = my_strdup("cd");
+    av[1] = NULL;
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=tests");
+    env[2] = NULL;
+    char *buffer = malloc(sizeof(char) * 300);
+    char *old_path = malloc(sizeof(char) * 300);
+
+    getcwd(old_path, 300);
+    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    getcwd(buffer, 300);
+    if (my_strcmp(buffer, get_env("HOME", my_table_cpy(env))))
+        my_put_nbr(0);
+    else
+        my_put_nbr(1);
+    print_env(env);
+    char final_str[100];
+    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
+    strcat(final_str, "\n");
+    cr_assert_stdout_eq_str(final_str);
+}
+
+Test(main_cd, main_cd2, .init = redirect_all_std)
+{
+    char **av = malloc(sizeof(char *) * 3);
+    av[0] = my_strdup("cd");
+    av[1] = my_strdup("~");
+    av[2] = NULL;
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=tests");
+    env[2] = NULL;
+    char *buffer = malloc(sizeof(char) * 300);
+    char *old_path = malloc(sizeof(char) * 300);
+
+    getcwd(old_path, 300);
+    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    getcwd(buffer, 300);
+    if (my_strcmp(buffer, get_env("HOME", my_table_cpy(env))))
+        my_put_nbr(0);
+    else
+        my_put_nbr(1);
+    print_env(env);
+    char final_str[100];
+    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
+    strcat(final_str, "\n");
+    cr_assert_stdout_eq_str(final_str);
+}

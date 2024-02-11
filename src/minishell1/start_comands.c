@@ -14,7 +14,7 @@ int execute_in_commands_struct(commands_t *commands, char **data, char **env)
 
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
-            exit(elements->fct(my_array_len(data), data, env));
+            return(elements->fct(my_array_len(data), data, env));
         }
         elements = elements->next;
     }

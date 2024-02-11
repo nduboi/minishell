@@ -11,7 +11,7 @@
 typedef struct my_commands {
 
     char *name;
-    int (*fct)(int ac, char **data, char **env);
+    int (*fct)(int ac, char **data, char ***env);
     struct my_commands *next;
 }commands_t;
 

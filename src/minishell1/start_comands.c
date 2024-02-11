@@ -8,24 +8,24 @@
 #include "minishell1.h"
 #include "library.h"
 
-int execute_in_commands_struct(commands_t *commands, char **data, char **env)
+int execute_in_commands_struct(commands_t *commands, char **data, char ***env)
 {
     commands_t *elements = commands;
 
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
-            return(elements->fct(my_array_len(data), data, env));
+            (elements->fct(my_array_len(data), data, env));
+            return 0;
         }
         elements = elements->next;
     }
     return 1;
 }
 
-int execution_process(char **data, int cmds, commands_t *commands, char **env)
+int execution_process(char **data, int cmds, commands_t *commands, char ***env)
 {
     if (cmds == 2) {
-        if (execve(get_pwd_file(data[0]), data, env) == -1 &&
-            execve(data[0], data, env) == -1) {
+        if (execve(get_pwd_file(data[0]), data, (*env)) == -1) {
             perror("execve");
             return 1;
         }
@@ -52,7 +52,7 @@ static int wait_pid_fork(pid_t pid)
     return status;
 }
 
-int start_commands(char **data, int cmds, commands_t *commands, char **env)
+int start_commands(char **data, int cmds, commands_t *commands, char ***env)
 {
     pid_t pid;
 

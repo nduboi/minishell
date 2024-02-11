@@ -9,7 +9,7 @@
 #include "library.h"
 
 static int execute_in_commands_struct(commands_t *commands,
-    char **data, char **env)
+    char **data, char ***env)
 {
     commands_t *elements = commands;
 
@@ -23,11 +23,10 @@ static int execute_in_commands_struct(commands_t *commands,
 }
 
 static int execution_process_non_interactive(char **data, int cmds,
-    commands_t *commands, char **env)
+    commands_t *commands, char ***env)
 {
     if (cmds == 2) {
-        if (execve(get_pwd_file(data[0]), data, env) == -1 &&
-            execve(data[0], data, env) == -1) {
+        if (execve(get_pwd_file(data[0]), data, (*env)) == -1) {
             perror("execve");
             return 1;
         }
@@ -38,7 +37,7 @@ static int execution_process_non_interactive(char **data, int cmds,
 }
 
 int start_commands_non_interactive(char **data, int cmds, commands_t *commands,
-    char **env)
+    char ***env)
 {
     if (cmds == 2 || cmds == 1) {
         execution_process_non_interactive(data, cmds, commands, env);

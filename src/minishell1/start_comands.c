@@ -29,7 +29,7 @@ int execution_process(char **data, int cmds, commands_t *commands, char **env)
             perror("execve");
             return 1;
         }
-    } else {
+    } else if (cmds == 1) {
         execute_in_commands_struct(commands, data, env);
     }
     return 0;
@@ -54,9 +54,10 @@ static int wait_pid_fork(pid_t pid)
 
 int start_commands(char **data, int cmds, commands_t *commands, char **env)
 {
-    pid_t pid = fork();
+    pid_t pid;
 
-    if (cmds == 2 || cmds == 1) {
+    if (cmds == 2) {
+        pid = fork();
         if (pid == -1)
             error_pid();
         if (pid == 0) {
@@ -65,5 +66,7 @@ int start_commands(char **data, int cmds, commands_t *commands, char **env)
             wait_pid_fork(pid);
         }
     }
+    if (cmds == 1)
+        execution_process(data, cmds, commands, env);
     return 0;
 }

@@ -17,15 +17,16 @@ static int go_folder (char *src)
     return 0;
 }
 
-static int special_case(char *src, char **env)
+static int specific_cases(char **av, char **env)
 {
-    if (my_strcmp(src, "~") == 0) {
-        if (chdir(get_env("HOME", env)) == -1)
-            return 84;
+    if (my_strcmp(av[1], "~") == 0) {
+        chdir(get_env("HOME", env));
+        return 0;
     }
-    if (my_strcmp(src, "-") == 0) {
+    if (my_strcmp(av[1], "-") == 0) {
         if (chdir(get_env("OLDPWD", env)) == -1)
             return 84;
+        return 0;
     }
     return 0;
 }
@@ -40,7 +41,7 @@ int main_cd(int ac, char **av, char **env)
         if (my_strcmp(av[1], "~") != 0 && my_strcmp(av[1], "-") != 0) {
             return go_folder(av[1]);
         } else
-            return special_case(av[1], env);
+            return specific_cases(av, env);
     } else
         return 84;
     return 0;

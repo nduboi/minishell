@@ -21,7 +21,7 @@ int non_interactive(char **env)
     data = my_str_to_word_array(str);
     if (my_strcmp(data[0], "exit") == 0)
         return 0;
-    check_correct_command(&cmds, data, commands);
+    check_correct_command(&cmds, data, commands, env);
     if (cmds != 0)
         cmds = start_commands_non_interactive(data, cmds, commands, &env);
     free(data);

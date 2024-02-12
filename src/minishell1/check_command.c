@@ -8,18 +8,26 @@
 #include "minishell1.h"
 #include "library.h"
 
-int check_internal_commands(char *src, int *cmds)
+int check_internal_commands(char *src, int *cmds, char **env)
 {
     struct stat buffer;
-    char *pwd = get_pwd_file(src);
+    char *pwd;
+    char **data_path = my_str_to_word_array_pwd(get_env("PATH",
+        my_table_cpy(env)));
+    int len = my_array_len(data_path);
 
-    if (stat(pwd, &buffer) == -1 && stat(src, &buffer) == -1)
-        return 0;
+    for (int i = 0; i < len; i++) {
+        pwd = get_pwd_file(src, data_path[i], env);
+        if (!(stat(pwd, &buffer) == -1 && stat(src, &buffer) == -1))
+            break;
+        free(pwd);
+    }
     if (access(pwd, X_OK) == -1 && access(src, X_OK) == -1) {
         write(2, "Cannot execute program\n", 24);
         *cmds = 0;
         return 1;
     }
+    free(pwd);
     *cmds = 2;
     return 1;
 }
@@ -35,7 +43,8 @@ static void set_function(char **data, commands_t **elements)
     return;
 }
 
-void check_correct_command(int *cmds, char **data, commands_t *commands)
+void check_correct_command(int *cmds, char **data, commands_t *commands,
+    char **env)
 {
     commands_t *elements = commands;
 
@@ -51,7 +60,7 @@ void check_correct_command(int *cmds, char **data, commands_t *commands)
         }
         elements = elements->next;
     }
-    if (check_internal_commands(data[0], cmds) == 1)
+    if (check_internal_commands(data[0], cmds, env) == 1)
         return;
     *cmds = 0;
     write(2, "No commands found\n", 19);

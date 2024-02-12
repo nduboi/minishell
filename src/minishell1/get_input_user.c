@@ -31,7 +31,7 @@ int get_input_user(char **env)
         data = my_str_to_word_array(str);
         if (my_strcmp(data[0], "exit") == 0)
             return 0;
-        check_correct_command(&cmds, data, commands);
+        check_correct_command(&cmds, data, commands, env);
         if (cmds != 0)
             start_commands(data, cmds, commands, &env);
         free_obj(data, str);

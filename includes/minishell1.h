@@ -24,9 +24,11 @@
 
 int get_input_user(char **env);
 void fill_struct(commands_t **commands);
-void check_correct_command(int *cmds, char **data, commands_t *commands);
-char *get_pwd_file(char *src);
+void check_correct_command(int *cmds, char **data, commands_t *commands,
+    char **env);
+char *get_pwd_file(char *src, char *path, char **env);
 char **my_str_to_word_array(char const *str);
+char **my_str_to_word_array_pwd(char const *str);
 int start_commands(char **data, int cmds, commands_t *commands, char ***env);
 int non_interactive(char **env);
 int execution_process(char **data, int cmds, commands_t *commands,

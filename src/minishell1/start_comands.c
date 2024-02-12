@@ -22,13 +22,22 @@ int execute_in_commands_struct(commands_t *commands, char **data, char ***env)
     return 1;
 }
 
+static int execute_env_path(char **data, char ***env)
+{
+    char **data_path = my_str_to_word_array_pwd(get_env("PATH",
+        my_table_cpy(*env)));
+    int len_array = my_array_len(data_path);
+
+    for (int i = 0; i < len_array; i++) {
+        execve(get_pwd_file(data[0], data_path[i], (*env)), data, (*env));
+    }
+    return 0;
+}
+
 int execution_process(char **data, int cmds, commands_t *commands, char ***env)
 {
     if (cmds == 2) {
-        if (execve(get_pwd_file(data[0]), data, (*env)) == -1) {
-            perror("execve");
-            return 1;
-        }
+        execute_env_path(data, env);
     } else if (cmds == 1) {
         execute_in_commands_struct(commands, data, env);
     }

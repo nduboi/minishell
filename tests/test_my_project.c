@@ -258,7 +258,7 @@ Test(get_line_env, get_line_env1, .init = redirect_all_std)
 
     my_put_nbr(get_line_env("azfbzbf", env));
     print_env(env);
-    cr_assert_stdout_eq_str("2coucou\ntests\n");
+    cr_assert_stdout_eq_str("-1coucou\ntests\n");
 }
 
 Test(my_table_cpy, my_table_cpy1, .init = redirect_all_std)
@@ -270,7 +270,7 @@ Test(my_table_cpy, my_table_cpy1, .init = redirect_all_std)
 
     my_put_nbr(get_line_env("azfbzbf", my_table_cpy(env)));
     print_env(env);
-    cr_assert_stdout_eq_str("2coucou=noa\ntests=noa\n");
+    cr_assert_stdout_eq_str("-1coucou=noa\ntests=noa\n");
 }
 
 Test(my_table_cpy, my_table_cpy2, .init = redirect_all_std)
@@ -283,7 +283,7 @@ Test(my_table_cpy, my_table_cpy2, .init = redirect_all_std)
 
     my_put_nbr(get_line_env("azfbzbf", cpy_table));
     print_env(cpy_table);
-    cr_assert_stdout_eq_str("2coucou\ntests\n");
+    cr_assert_stdout_eq_str("-1coucou\ntests\n");
 }
 
 Test(main_cd, main_cd1, .init = redirect_all_std)

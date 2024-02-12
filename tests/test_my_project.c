@@ -471,3 +471,32 @@ Test(get_pwd_file, get_pwd_file1, .init = redirect_all_std)
     }
     cr_assert_stdout_eq_str("0");
 }
+
+Test(main_exit, main_exit1, .init = redirect_all_std, .exit_code = 0)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+    char **av = malloc(sizeof(char *) * 2);
+    av[0] = my_strdup("exit");
+    av[1] = NULL;
+
+    main_exit(1, av, &env);
+    cr_assert_stdout_eq_str("");
+}
+
+Test(main_exit, main_exit2, .init = redirect_all_std, .exit_code = 34)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+    char **av = malloc(sizeof(char *) * 3);
+    av[0] = my_strdup("exit");
+    av[1] = my_strdup("34");
+    av[2] = NULL;
+
+    main_exit(2, av, &env);
+    cr_assert_stdout_eq_str("");
+}

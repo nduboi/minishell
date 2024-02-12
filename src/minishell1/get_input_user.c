@@ -29,8 +29,6 @@ int get_input_user(char **env)
         read(STDIN_FILENO, str, MAXLEN);
         str[my_strlen(str) - 1] = '\0';
         data = my_str_to_word_array(str);
-        if (my_strcmp(data[0], "exit") == 0)
-            return 0;
         check_correct_command(&cmds, data, commands, env);
         if (cmds != 0)
             start_commands(data, cmds, commands, &env);

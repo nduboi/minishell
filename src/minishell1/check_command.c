@@ -40,6 +40,8 @@ static void set_function(char **data, commands_t **elements)
         (*elements)->fct = main_env;
     if (my_strcmp(data[0], "setenv") == 0)
         (*elements)->fct = main_setenv;
+    if (my_strcmp(data[0], "exit") == 0)
+        (*elements)->fct = main_exit;
     return;
 }
 

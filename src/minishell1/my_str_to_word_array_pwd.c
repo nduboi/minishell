@@ -122,6 +122,8 @@ char **my_str_to_word_array_pwd(char const *str)
     int i;
     int *tab = malloc(sizeof(int) * 3);
 
+    if (!str)
+        return NULL;
     result = malloc(sizeof(char *) * (how_many_array(str) + 1));
     for (i = 0; str[i] != '\0'; i++) {
         tab = (int[]){i, n};

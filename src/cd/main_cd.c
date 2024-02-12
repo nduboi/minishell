@@ -11,11 +11,12 @@
 static int go_folder(char *src, char ***env)
 {
     char *buffer = malloc(sizeof(char) * (BUFFER_SIZE));
-    char **env_variables = malloc(sizeof(char *) * 4);
+    char **env_variables = fill_env_variables_oldpwd();
 
-    env_variables[0] = my_strdup("setenv");
-    env_variables[1] = my_strdup("OLDPWD");
-    env_variables[3] = NULL;
+    if (!(src)) {
+        write(2, "Error with the to the target\n", 29);
+        return 1;
+    }
     getcwd(buffer, (BUFFER_SIZE));
     env_variables[2] = buffer;
     if (opendir(src) == NULL) {

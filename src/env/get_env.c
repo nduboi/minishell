@@ -12,6 +12,8 @@ char *get_env(char *src, char **env)
 {
     char *result = NULL;
 
+    if (!env)
+        return NULL;
     for (int i = 0; env[i]; i++) {
         result = strtok(env[i], "=");
         if (my_strcmp(result, src) == 0) {

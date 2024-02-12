@@ -24,6 +24,7 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/env/get_env.c	\
 		src/env/print_env.c	\
 		src/setenv/main_setenv.c	\
+		src/env/fill_env.c	\
 
 FILE_MAIN =	src/main.c	\
 

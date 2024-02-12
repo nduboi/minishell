@@ -54,6 +54,32 @@ Test(my_str_to_word_array, my_str_to_word_array2, .init = redirect_all_std)
     cr_assert_stdout_eq_str("l\n");
 }
 
+Test(my_str_to_word_array_pwd, my_str_to_word_array_pwd1, .init = redirect_all_std)
+{
+    char *str = "/dev/bin:/home/noa";
+    char **data;
+
+    data = my_str_to_word_array_pwd(str);
+    for (int i = 0; data[i]; i++) {
+        my_putstr(data[i]);
+        my_putchar('\n');
+    }
+    cr_assert_stdout_eq_str("/dev/bin\n/home/noa\n");
+}
+
+Test(my_str_to_word_array_pwd, my_str_to_word_array_pwd2, .init = redirect_all_std)
+{
+    char *str = "/";
+    char **data;
+
+    data = my_str_to_word_array_pwd(str);
+    for (int i = 0; data[i]; i++) {
+        my_putstr(data[i]);
+        my_putchar('\n');
+    }
+    cr_assert_stdout_eq_str("/\n");
+}
+
 Test(check_correct_command, check_correct_command1, .init = redirect_all_std)
 {
     commands_t *commands = NULL;

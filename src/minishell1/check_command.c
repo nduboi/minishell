@@ -41,8 +41,7 @@ static int check_error(int len)
 static int check_acces(char *src, int *cmds)
 {
     if (access(src, X_OK) == -1) {
-        perror("errno");
-        *cmds = 0;
+        *cmds = 1;
         return 1;
     }
     return 0;
@@ -68,7 +67,7 @@ static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
         return 1;
     free(pwd);
     *cmds = 2;
-    return 1;
+    return 0;
 }
 
 int check_commands(char *src, int *cmds, char **env)
@@ -116,9 +115,9 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
         }
         elements = elements->next;
     }
-    if (check_commands(data[0], cmds, env) == 1)
-        return;
-    *cmds = 0;
-    write(2, "No commands found\n", 18);
+    if (check_commands(data[0], cmds, env) == 1) {
+        *cmds = 84;
+        write(2, "No commands found\n", 18);
+    }
     return;
 }

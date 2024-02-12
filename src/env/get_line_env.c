@@ -17,5 +17,5 @@ int get_line_env(char *name, char **env)
             return row;
         }
     }
-    return row;
+    return -1;
 }

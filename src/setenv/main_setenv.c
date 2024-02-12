@@ -8,11 +8,10 @@
 #include "minishell1.h"
 #include "library.h"
 
-static char *put_new_env(char *name, char *value)
+static char *add_name_value(char *name, char *value, char *result)
 {
     int len_name;
     int len_value;
-    char *result = NULL;
 
     if (name && value) {
         len_value = my_strlen(value);
@@ -29,6 +28,30 @@ static char *put_new_env(char *name, char *value)
     return result;
 }
 
+static char *add_name(char *name, char *value, char *result)
+{
+    int len_name;
+
+    if (name && !value) {
+        len_name = my_strlen(name);
+        result = malloc(sizeof(char) * (len_name + 2));
+        for (int i = 0; i < len_name; i++) {
+            result[i] = name[i];
+        }
+        result[len_name] = '=';
+    }
+    return result;
+}
+
+static char *put_new_env(char *name, char *value)
+{
+    char *result = NULL;
+
+    result = add_name_value(name, value, result);
+    result = add_name(name, value, result);
+    return result;
+}
+
 char **my_table_cpy(char **src)
 {
     char **result = NULL;
@@ -41,7 +64,6 @@ char **my_table_cpy(char **src)
             result[i] = my_strdup(src[i]);
         }
         result[array_len] = NULL;
-
     }
     return result;
 }
@@ -82,7 +104,7 @@ static char **modify_env_file(char **env, char *name, char *value)
 
 char **add_value_in_env(char **av, char **env)
 {
-    if (get_env(av[1], my_table_cpy(env)) == NULL)
+    if (get_line_env(av[1], my_table_cpy(env)) == -1)
         env = realloc_env(env, 1, av[1], av[2]);
     else
         env = modify_env_file(env, av[1], av[2]);
@@ -94,7 +116,12 @@ int main_setenv(int ac, char **av, char ***env)
     if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
         av[1] && av[2]) {
         (*env) = add_value_in_env(av, (*env));
-    } else
-        return 84;
-    return 0;
+        return 0;
+    }
+    if (ac == 2 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
+        av[1]) {
+        (*env) = add_value_in_env(av, (*env));
+        return 0;
+    }
+    return 84;
 }

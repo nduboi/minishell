@@ -28,6 +28,12 @@ static int execute_env_path(char **data, char ***env)
         my_table_cpy(*env)));
     int len_array = my_array_len(data_path);
 
+    if (my_strlen(data[0]) > 2) {
+        if (data[0][0] == '.' && data[0][1] == '/') {
+            execve(data[0], data, (*env));
+            return 0;
+        }
+    }
     for (int i = 0; i < len_array; i++) {
         execve(get_pwd_file(data[0], data_path[i], (*env)), data, (*env));
     }
@@ -37,19 +43,17 @@ static int execute_env_path(char **data, char ***env)
 static int execution_process_non_interactive(char **data, int cmds,
     commands_t *commands, char ***env)
 {
-    if (cmds == 2) {
+    if (cmds == 2)
         execute_env_path(data, env);
-    } else if (cmds == 1) {
+    else if (cmds == 1)
         execute_in_commands_struct(commands, data, env);
-    }
     return 0;
 }
 
 int start_commands_non_interactive(char **data, int cmds, commands_t *commands,
     char ***env)
 {
-    if (cmds == 2 || cmds == 1) {
+    if (cmds == 2 || cmds == 1)
         execution_process_non_interactive(data, cmds, commands, env);
-    }
     return 0;
 }

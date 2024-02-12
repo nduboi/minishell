@@ -8,28 +8,61 @@
 #include "minishell1.h"
 #include "library.h"
 
-int check_internal_commands(char *src, int *cmds, char **env)
+static int check_own_cmd(char *src, int *cmds)
 {
     struct stat buffer;
-    char *pwd;
+    int cmd = 0;
+
+    if (src[0] == '.' && src[1] == '/') {
+        if (!(stat(src, &buffer) == -1))
+            cmd = 1;
+    }
+    if (cmd == 1) {
+        if (access(src, X_OK) == -1) {
+            perror("errno");
+            *cmds = 0;
+            return 1;
+        }
+        *cmds = 2;
+        return 1;
+    }
+    return 0;
+}
+
+static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
+{
+    struct stat buffer;
     char **data_path = my_str_to_word_array_pwd(get_env("PATH",
         my_table_cpy(env)));
     int len = my_array_len(data_path);
 
     for (int i = 0; i < len; i++) {
-        pwd = get_pwd_file(src, data_path[i], env);
-        if (!(stat(pwd, &buffer) == -1 && stat(src, &buffer) == -1))
-            break;
         free(pwd);
+        pwd = get_pwd_file(src, data_path[i], env);
+        if (!(stat(pwd, &buffer) == -1)) {
+            break;
+        }
     }
-    if (access(pwd, X_OK) == -1 && access(src, X_OK) == -1) {
-        write(2, "Cannot execute program\n", 24);
+    if (access(pwd, X_OK) == -1) {
+        perror("errno");
         *cmds = 0;
         return 1;
     }
     free(pwd);
     *cmds = 2;
     return 1;
+}
+
+int check_commands(char *src, int *cmds, char **env)
+{
+    char *pwd = malloc(sizeof(char *) * 1);
+
+    if (my_strlen(src) >= 2)
+        if (check_own_cmd(src, cmds) == 1)
+            return 1;
+    if (check_internal_cmd(pwd, src, cmds, env) == 1)
+        return 1;
+    return 0;
 }
 
 static void set_function(char **data, commands_t **elements)
@@ -63,9 +96,9 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
         }
         elements = elements->next;
     }
-    if (check_internal_commands(data[0], cmds, env) == 1)
+    if (check_commands(data[0], cmds, env) == 1)
         return;
     *cmds = 0;
-    write(2, "No commands found\n", 19);
+    write(2, "No commands found\n", 18);
     return;
 }

@@ -48,10 +48,11 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
 {
     commands_t *elements = commands;
 
+    *cmds = 0;
     if (!data)
-        exit(0);
-    if (!data[0])
-        exit(0);
+        return;
+    if (!data[0] || my_strcmp(data[0], "\n") == 0)
+        return;
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
             set_function(data, &elements);

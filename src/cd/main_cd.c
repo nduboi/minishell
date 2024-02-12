@@ -31,7 +31,7 @@ static int go_folder(char *src, char ***env)
     return 0;
 }
 
-static int specific_cases(char **av, char ***env)
+int specific_cases(char **av, char ***env)
 {
     if (my_strcmp(av[1], "~") == 0) {
         return go_folder(get_env("HOME", my_table_cpy(*env)), env);
@@ -39,7 +39,7 @@ static int specific_cases(char **av, char ***env)
     if (my_strcmp(av[1], "-") == 0) {
         return go_folder(get_env("OLDPWD", my_table_cpy(*env)), env);
     }
-    return 0;
+    return 84;
 }
 
 int main_cd(int ac, char **av, char ***env)

@@ -19,12 +19,12 @@ static int go_folder(char *src, char ***env)
     getcwd(buffer, (BUFFER_SIZE));
     env_variables[2] = buffer;
     if (opendir(src) == NULL) {
-        strerror(ENOENT);
-        return 84;
+        write(2, "Wrong directory\n", 17);
+        return 1;
     } else {
         if (chdir(src) == -1) {
-            strerror(errno);
-            return 84;
+            write(2, "Wrong directory\n", 17);
+            return 1;
         }
         (*env) = add_value_in_env(env_variables, (*env));
     }
@@ -39,7 +39,7 @@ int specific_cases(char **av, char ***env)
     if (my_strcmp(av[1], "-") == 0) {
         return go_folder(get_env("OLDPWD", my_table_cpy(*env)), env);
     }
-    return 84;
+    return 1;
 }
 
 int main_cd(int ac, char **av, char ***env)
@@ -53,6 +53,6 @@ int main_cd(int ac, char **av, char ***env)
         } else
             return specific_cases(av, env);
     } else
-        return 84;
+        return 1;
     return 0;
 }

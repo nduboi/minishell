@@ -90,6 +90,7 @@ Test(check_correct_command, check_correct_command1, .init = redirect_all_std)
     char *data_nimp[] = {"fqfqfefq", NULL};
     char *data_env[] = {"env", NULL};
     char *data_setenv[] = {"setenv", NULL};
+    char *data_unsetenv[] = {"unsetenv", NULL};
     char *data_NULL[] = {NULL};
     char **env = malloc(sizeof(char *) * 2);
     env[0] = my_strdup("PATH=/usr/bin");
@@ -110,13 +111,16 @@ Test(check_correct_command, check_correct_command1, .init = redirect_all_std)
     check_correct_command(&cmds, data_setenv, commands, env);
     my_put_nbr(cmds);
     my_putchar('\n');
+    check_correct_command(&cmds, data_unsetenv, commands, env);
+    my_put_nbr(cmds);
+    my_putchar('\n');
     check_correct_command(&cmds, NULL, commands, env);
     my_put_nbr(cmds);
     my_putchar('\n');
     check_correct_command(&cmds, data_NULL, commands, env);
     my_put_nbr(cmds);
     my_putchar('\n');
-    cr_assert_stdout_eq_str("2\n1\n0\n1\n1\n0\n0\n");
+    cr_assert_stdout_eq_str("2\n1\n84\n1\n1\n1\n0\n0\n");
 }
 
 Test(main_env, main_env1, .init = redirect_all_std)
@@ -486,7 +490,7 @@ Test(main_exit, main_exit1, .init = redirect_all_std, .exit_code = 0)
     cr_assert_stdout_eq_str("");
 }
 
-Test(main_exit, main_exit2, .init = redirect_all_std, .exit_code = 34)
+Test(main_exit, main_exit3, .init = redirect_all_std, .exit_code = 34)
 {
     char **env = malloc(sizeof(char *) * 3);
     env[0] = my_strdup("coucou=noa");
@@ -498,5 +502,68 @@ Test(main_exit, main_exit2, .init = redirect_all_std, .exit_code = 34)
     av[2] = NULL;
 
     main_exit(2, av, &env);
+    cr_assert_stdout_eq_str("");
+}
+
+Test(main_unsetenv, main_unsetenv1, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+    char **av = malloc(sizeof(char *) * 3);
+    av[0] = my_strdup("unsetenv");
+    av[1] = my_strdup("HOME");
+    av[2] = NULL;
+
+    main_unsetenv(2, av, &env);
+    print_env(env);
+    cr_assert_stdout_eq_str("coucou=noa\n");
+}
+
+Test(main_unsetenv, main_unsetenv2, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+    char **av = malloc(sizeof(char *) * 4);
+    av[0] = my_strdup("unsetenv");
+    av[1] = my_strdup("HOME");
+    av[2] = my_strdup("coucou");
+    av[3] = NULL;
+
+    main_unsetenv(my_array_len(av), av, &env);
+    print_env(env);
+    cr_assert_stdout_eq_str("");
+}
+
+Test(main_unsetenv, main_unsetenv3, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+    char **av = malloc(sizeof(char *) * 3);
+    av[0] = my_strdup("unsetenv");
+    av[1] = my_strdup("neo");
+    av[2] = NULL;
+
+    main_unsetenv(my_array_len(av), av, &env);
+    print_env(env);
+    cr_assert_stdout_eq_str("coucou=noa\nHOME=/home/roussierenoa\n");
+}
+
+Test(main_unsetenv, main_unsetenv4, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 1);
+    env[0] = NULL;
+    char **av = malloc(sizeof(char *) * 3);
+    av[0] = my_strdup("unsetenv");
+    av[1] = my_strdup("neo");
+    av[2] = NULL;
+
+    main_unsetenv(my_array_len(av), av, &env);
+    print_env(env);
     cr_assert_stdout_eq_str("");
 }

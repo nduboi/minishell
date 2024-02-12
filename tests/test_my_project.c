@@ -426,3 +426,48 @@ Test(specific_cases, specific_cases1, .init = redirect_all_std)
     my_put_nbr(specific_cases(av, &env));
     cr_assert_stdout_eq_str("84");
 }
+
+char *replace_title_by_homedirectory(char *src, char *home);
+
+Test(replace_title_by_homedirectory, replace_title_by_homedirectory1, .init = redirect_all_std)
+{
+    my_putstr(replace_title_by_homedirectory("~/my_script", "/home/roussierenoa"));
+    cr_assert_stdout_eq_str("/home/roussierenoa/my_script");
+}
+
+char *replace_title_by_homedirectory(char *src, char *home);
+
+Test(replace_title_by_homedirectory, replace_title_by_homedirectory2, .init = redirect_all_std)
+{
+    my_putstr(replace_title_by_homedirectory("NULL", NULL));
+    cr_assert_stdout_eq_str("NULL");
+}
+
+
+char *check_for_home_dir(char *path, char **env);
+
+Test(check_for_home_dir, check_for_home_dir1, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+
+    my_putstr(check_for_home_dir("~/my_script", env));
+    cr_assert_stdout_eq_str("/home/roussierenoa/my_script");
+}
+
+Test(get_pwd_file, get_pwd_file1, .init = redirect_all_std)
+{
+    char **env = malloc(sizeof(char *) * 3);
+    env[0] = my_strdup("coucou=noa");
+    env[1] = my_strdup("HOME=/home/roussierenoa");
+    env[2] = NULL;
+
+    if (!(get_pwd_file(NULL, "nana", env))) {
+        my_put_nbr(0);
+    } else {
+        my_put_nbr(1);
+    }
+    cr_assert_stdout_eq_str("0");
+}

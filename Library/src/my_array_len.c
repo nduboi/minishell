@@ -11,6 +11,8 @@ int my_array_len(char **av)
 {
     int i;
 
+    if (!av)
+        return -1;
     for (i = 0; av[i]; i++);
     return i;
 }

@@ -35,6 +35,10 @@ static int execute_env_path(char **data, char ***env)
         my_table_cpy(*env)));
     int len_array = my_array_len(data_path);
 
+    if (!data_path) {
+        write(2, "Error with path environement variable\n", 38);
+        return 1;
+    }
     if (my_strlen(data[0]) > 2) {
         if (data[0][0] == '.' && data[0][1] == '/') {
             execve(data[0], data, (*env));

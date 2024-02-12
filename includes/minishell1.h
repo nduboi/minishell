@@ -39,10 +39,12 @@ int main_cd(int ac, char **av, char ***env);
 int main_env(int ac, char **av, char ***env);
 int main_setenv(int ac, char **av, char ***env);
 int main_exit(int ac, char **av, char ***env);
+char **add_value_in_env(char **av, char **env);
 char *get_env(char *src, char **env);
 int get_line_env(char *name, char **env);
 void print_env(char **env);
 char **my_table_cpy(char **src);
 char **add_value_in_env(char **av, char **env);
+char **fill_env_variables_oldpwd(void);
 
 #endif /* !MINISHELL1 */

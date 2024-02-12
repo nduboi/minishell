@@ -29,6 +29,25 @@ static int check_own_cmd(char *src, int *cmds)
     return 0;
 }
 
+static int check_error(int len)
+{
+    if (len == -1) {
+        write(2, "Error with path environement variable\n", 38);
+        return 1;
+    }
+    return 0;
+}
+
+static int check_acces(char *src, int *cmds)
+{
+    if (access(src, X_OK) == -1) {
+        perror("errno");
+        *cmds = 0;
+        return 1;
+    }
+    return 0;
+}
+
 static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
 {
     struct stat buffer;
@@ -36,6 +55,8 @@ static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
         my_table_cpy(env)));
     int len = my_array_len(data_path);
 
+    if (check_error(len) == 1)
+        return 1;
     for (int i = 0; i < len; i++) {
         free(pwd);
         pwd = get_pwd_file(src, data_path[i], env);
@@ -43,11 +64,8 @@ static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
             break;
         }
     }
-    if (access(pwd, X_OK) == -1) {
-        perror("errno");
-        *cmds = 0;
+    if (check_acces(pwd, cmds) == 1)
         return 1;
-    }
     free(pwd);
     *cmds = 2;
     return 1;

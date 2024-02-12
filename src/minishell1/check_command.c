@@ -24,9 +24,9 @@ static int check_own_cmd(char *src, int *cmds)
             return 1;
         }
         *cmds = 2;
-        return 1;
+        return 0;
     }
-    return 0;
+    return 1;
 }
 
 static int check_error(int len)
@@ -75,11 +75,11 @@ int check_commands(char *src, int *cmds, char **env)
     char *pwd = malloc(sizeof(char *) * 1);
 
     if (my_strlen(src) >= 2)
-        if (check_own_cmd(src, cmds) == 1)
-            return 1;
-    if (check_internal_cmd(pwd, src, cmds, env) == 1)
-        return 1;
-    return 0;
+        if (check_own_cmd(src, cmds) == 0)
+            return 0;
+    if (check_internal_cmd(pwd, src, cmds, env) == 0)
+        return 0;
+    return 1;
 }
 
 static void set_function(char **data, commands_t **elements)
@@ -94,6 +94,13 @@ static void set_function(char **data, commands_t **elements)
         (*elements)->fct = main_unsetenv;
     if (my_strcmp(data[0], "exit") == 0)
         (*elements)->fct = main_exit;
+    return;
+}
+
+static void write_error_cmd(char *src)
+{
+    write(2, src, my_strlen(src));
+    write(2, ": Command not found.\n", 21);
     return;
 }
 
@@ -117,7 +124,7 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
     }
     if (check_commands(data[0], cmds, env) == 1) {
         *cmds = 84;
-        write(2, "No commands found\n", 18);
+        write_error_cmd(data[0]);
     }
     return;
 }

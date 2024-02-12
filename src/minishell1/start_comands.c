@@ -21,8 +21,7 @@ int execute_in_commands_struct(commands_t *commands, char **data, char ***env)
 
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
-            (elements->fct(my_array_len(data), data, env));
-            return 0;
+            return (elements->fct(my_array_len(data), data, env));
         }
         elements = elements->next;
     }
@@ -53,12 +52,14 @@ static int execute_env_path(char **data, char ***env)
 
 int execution_process(char **data, int cmds, commands_t *commands, char ***env)
 {
+    int status = 0;
+
     if (cmds == 2)
-        execute_env_path(data, env);
+        status = execute_env_path(data, env);
     else if (cmds == 1) {
-        execute_in_commands_struct(commands, data, env);
+        status = execute_in_commands_struct(commands, data, env);
     }
-    return 0;
+    return status;
 }
 
 static void error_pid(void)
@@ -69,12 +70,15 @@ static void error_pid(void)
 
 static int wait_pid_fork(pid_t pid)
 {
-    int status;
+    int status = 0;
 
     if (waitpid(pid, &status, WUNTRACED | WCONTINUED) == -1) {
         my_putstr("ERROR");
         perror("waitpid");
-        exit(1);
+        exit(84);
+    }
+    if (WIFEXITED(status)) {
+        return WEXITSTATUS(status);
     }
     return status;
 }
@@ -96,6 +100,6 @@ int start_commands(char **data, int cmds, commands_t *commands, char ***env)
         }
     }
     if (cmds == 1)
-        execution_process(data, cmds, commands, env);
-    return 0;
+        status = execution_process(data, cmds, commands, env);
+    return status;
 }

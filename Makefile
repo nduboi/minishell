@@ -15,7 +15,6 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/minishell1/my_str_to_word_array.c	\
 		src/minishell1/my_str_to_word_array_pwd.c	\
 		src/minishell1/start_comands.c	\
-		src/minishell1/start_comands_no_interactive.c	\
 		src/minishell1/non_interactive.c	\
 		src/cd/main_cd.c	\
 		src/env/main_env.c	\

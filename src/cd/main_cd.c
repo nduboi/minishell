@@ -19,11 +19,11 @@ static int go_folder(char *src, char ***env)
     getcwd(buffer, (BUFFER_SIZE));
     env_variables[2] = buffer;
     if (opendir(src) == NULL) {
-        write(2, "Wrong directory\n", 17);
+        write(2, "Wrong directory\n", 16);
         return 1;
     } else {
         if (chdir(src) == -1) {
-            write(2, "Wrong directory\n", 17);
+            write(2, "Wrong directory\n", 16);
             return 1;
         }
         (*env) = add_value_in_env(env_variables, (*env));

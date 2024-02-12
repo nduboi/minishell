@@ -25,7 +25,7 @@ int get_input_user(char **env)
     fill_struct(&commands);
     while (1) {
         str = malloc(sizeof(char) * MAXLEN);
-        write(1, "$> ", 4);
+        write(1, "$> ", 3);
         read(STDIN_FILENO, str, MAXLEN);
         str[my_strlen(str) - 1] = '\0';
         data = my_str_to_word_array(str);

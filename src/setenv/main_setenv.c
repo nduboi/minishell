@@ -68,21 +68,11 @@ char **my_table_cpy(char **src)
     return result;
 }
 
-static void free_internal_env(char **env)
-{
-    if (!env)
-        return;
-    for (int i = 0; env[i]; i++)
-        free(env[i]);
-    return;
-}
-
 char **realloc_env(char **env, int nbr_moreline, char *name, char *value)
 {
     char **cpy_env = my_table_cpy(env);
     int len = my_array_len(env);
 
-    free_internal_env(env);
     env = NULL;
     env = malloc(sizeof(char *) * (len + nbr_moreline + 1));
     for (int i = 0; i < len; i++) {
@@ -104,10 +94,11 @@ static char **modify_env_file(char **env, char *name, char *value)
 
 char **add_value_in_env(char **av, char **env)
 {
-    if (get_line_env(av[1], my_table_cpy(env)) == -1)
+    if (get_line_env(av[1], my_table_cpy(env)) == -1) {
         env = realloc_env(env, 1, av[1], av[2]);
-    else
+    } else {
         env = modify_env_file(env, av[1], av[2]);
+    }
     return env;
 }
 

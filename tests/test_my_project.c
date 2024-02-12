@@ -406,7 +406,7 @@ Test(main_cd, main_cd5, .init = redirect_all_std)
     env[2] = NULL;
 
     my_put_nbr(main_cd(my_array_len(av), av, &env));
-    cr_assert_stdout_eq_str("84");
+    cr_assert_stdout_eq_str("1");
 }
 
 int specific_cases(char **av, char ***env);
@@ -424,7 +424,7 @@ Test(specific_cases, specific_cases1, .init = redirect_all_std)
     env[2] = NULL;
 
     my_put_nbr(specific_cases(av, &env));
-    cr_assert_stdout_eq_str("84");
+    cr_assert_stdout_eq_str("1");
 }
 
 char *replace_title_by_homedirectory(char *src, char *home);

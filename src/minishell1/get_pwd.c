@@ -31,7 +31,7 @@ char *replace_title_by_homedirectory(char *src, char *home)
     return result;
 }
 
-static char *check_for_home_dir(char *path, char **env)
+char *check_for_home_dir(char *path, char **env)
 {
     char *base = NULL;
 
@@ -52,7 +52,7 @@ char *get_pwd_file(char *src, char *path, char **env)
     int lenbase;
     char *result;
 
-    if (!src || !path)
+    if (!src || !path || !env)
         return NULL;
     len = my_strlen(src);
     base = check_for_home_dir(path, env);

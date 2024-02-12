@@ -41,8 +41,18 @@ char **my_table_cpy(char **src)
             result[i] = my_strdup(src[i]);
         }
         result[array_len] = NULL;
+
     }
     return result;
+}
+
+static void free_internal_env(char **env)
+{
+    if (!env)
+        return;
+    for (int i = 0; env[i]; i++)
+        free(env[i]);
+    return;
 }
 
 char **realloc_env(char **env, int nbr_moreline, char *name, char *value)
@@ -50,6 +60,7 @@ char **realloc_env(char **env, int nbr_moreline, char *name, char *value)
     char **cpy_env = my_table_cpy(env);
     int len = my_array_len(env);
 
+    free_internal_env(env);
     env = NULL;
     env = malloc(sizeof(char *) * (len + nbr_moreline + 1));
     for (int i = 0; i < len; i++) {

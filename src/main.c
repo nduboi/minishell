@@ -10,6 +10,8 @@
 
 int main(int ac, char **av, char **env)
 {
+    env_var_t *env_var = fill_environement(env);
+
     if (ac == 1 && my_strcmp(av[0], "./mysh") == 0) {
         if (isatty(STDIN_FILENO)) {
             return get_input_user(env);

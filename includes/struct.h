@@ -15,4 +15,11 @@ typedef struct my_commands {
     struct my_commands *next;
 }commands_t;
 
+typedef struct env_var {
+
+    char *name;
+    char *value;
+    struct env_var *next;
+}env_var_t;
+
 #endif /* !STRUCT_H_ */

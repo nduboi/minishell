@@ -20,3 +20,18 @@ void print_env(char **env)
         }
     }
 }
+
+void print_env_struct(env_var_t *env)
+{
+    env_var_t *element = env;
+
+    while (element) {
+        if (element->name)
+            my_putstr(element->name);
+        my_putchar('=');
+        if (element->value)
+            my_putstr(element->value);
+        my_putchar('\n');
+        element = element->next;
+    }
+}

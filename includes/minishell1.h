@@ -29,6 +29,7 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
 char *get_pwd_file(char *src, char *path, char **env);
 char **my_str_to_word_array(char const *str);
 char **my_str_to_word_array_pwd(char const *str);
+char **str_to_word_array(char *src, const char *separator);
 int start_commands(char **data, int cmds, commands_t *commands, char ***env);
 int non_interactive(char **env);
 int execution_process(char **data, int cmds, commands_t *commands,
@@ -45,7 +46,10 @@ char *get_env(char *src, char **env);
 int get_line_env(char *name, char **env);
 void print_env(char **env);
 char **my_table_cpy(char **src);
+char *my_str_cpy(char *src);
 char **add_value_in_env(char **av, char **env);
 char **fill_env_variables_oldpwd(void);
+env_var_t *fill_environement(char **env);
+void print_env_struct(env_var_t *env);
 
 #endif /* !MINISHELL1 */

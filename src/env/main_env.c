@@ -10,9 +10,10 @@
 
 int main_env(int ac, char **av, struct env_var **env)
 {
-    if (!(*env))
-        return 84;
-    if (ac == 1 && my_strcmp(av[0], "env") == 0) {
+    if (!*env)
+        return 0;
+    (void)av;
+    if (ac == 1) {
         print_env(*env);
     } else
         return 84;

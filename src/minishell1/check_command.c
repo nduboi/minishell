@@ -8,15 +8,23 @@
 #include "minishell1.h"
 #include "library.h"
 
+int content_slash(char *src)
+{
+    for (int i = 0; src[i] != '\0'; i++) {
+        if (src[i] == '/')
+            return 1;
+    }
+    return 0;
+}
+
 static int check_own_cmd(char *src, int *cmds)
 {
     struct stat buffer;
     int cmd = 0;
 
-    if (src[0] == '.' && src[1] == '/') {
+    if (content_slash(src))
         if (!(stat(src, &buffer) == -1))
             cmd = 1;
-    }
     if (cmd == 1) {
         if (access(src, X_OK) == -1) {
             perror("errno");

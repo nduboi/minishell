@@ -59,6 +59,7 @@ $(LIB):
 
 $(NAME): $(LIB) $(OBJ) $(OBJ_FILE_MAIN)
 	gcc -o $(NAME) $(OBJ) $(OBJ_FILE_MAIN) $(CFLAGS)
+	cp $(NAME) tester/$(NAME)
 
 re: fclean $(NAME)
 
@@ -72,6 +73,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f tester/$(NAME)
 	rm -f unit_tests
 	make fclean -C Library
 

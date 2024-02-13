@@ -42,7 +42,7 @@ int main_env(int ac, char **av, struct env_var **env);
 int main_setenv(int ac, char **av, struct env_var **env);
 int main_exit(int ac, char **av, env_var_t **env);
 int main_unsetenv(int ac, char **av, env_var_t **env);
-struct env_var *add_value_in_env(char **av, struct env_var *env);
+void add_value_in_env(char **av, struct env_var **env);
 char *get_env(char *src, struct env_var *env);
 void print_env(env_var_t *env);
 char **my_table_cpy(char **src);
@@ -53,5 +53,6 @@ void print_env_struct(env_var_t *env);
 char **my_linked_list_to_table(env_var_t *env);
 void delete_node(env_var_t **pos, char *src);
 int get_line_env(char *name, struct env_var *env);
+int content_slash(char *src);
 
 #endif /* !MINISHELL1 */

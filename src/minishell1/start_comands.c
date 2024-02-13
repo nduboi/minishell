@@ -41,7 +41,7 @@ static int execute_env_path(char **data, env_var_t **env)
         return 1;
     }
     if (my_strlen(data[0]) > 2) {
-        if (data[0][0] == '.' && data[0][1] == '/') {
+        if (content_slash(data[0]) == 1) {
             execve(data[0], data, env_table);
             return 0;
         }

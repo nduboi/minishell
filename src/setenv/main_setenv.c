@@ -24,26 +24,50 @@ char **my_table_cpy(char **src)
     return result;
 }
 
-void add_node_env(struct env_var **env, char *name, char *value)
+static void add_value_name_node(char *name, char *value, struct env_var *temp,
+    struct env_var **env)
 {
     struct env_var *elements;
-    struct env_var *temp = *env;
 
-    while (temp->next)
-        temp = temp->next;
     if (name && value) {
         elements = malloc(sizeof(env_var_t) * 1);
         elements->name = my_strdup(name);
         elements->value = my_strdup(value);
         elements->next = NULL;
-        temp->next = elements;
+        if (temp)
+            temp->next = elements;
+        else
+            *env = elements;
     }
+    return;
+}
+
+static void add_name_node(char *name, char *value, struct env_var *temp,
+    struct env_var **env)
+{
+    struct env_var *elements;
+
     if (name && !value) {
         elements = malloc(sizeof(env_var_t) * 1);
         elements->name = my_strdup(name);
         elements->next = NULL;
-        temp->next = elements;
+        if (temp)
+            temp->next = elements;
+        else
+            *env = elements;
     }
+    return;
+}
+
+void add_node_env(struct env_var **env, char *name, char *value)
+{
+    struct env_var *temp = *env;
+
+    if (temp)
+        while (temp->next)
+            temp = temp->next;
+    add_value_name_node(name, value, temp, env);
+    add_name_node(name, value, temp, env);
     return;
 }
 
@@ -68,31 +92,63 @@ void modify_node_env(struct env_var **env, char *name, char *value)
     return;
 }
 
-struct env_var *add_value_in_env(char **av, struct env_var *env)
+void add_value_in_env(char **av, struct env_var **env)
 {
-    if (get_line_env(av[1], env) == -1) {
-        add_node_env(&env, av[1], av[2]);
+    if (get_line_env(av[1], *env) == -1) {
+        add_node_env(env, av[1], av[2]);
     } else {
-        modify_node_env(&env, av[1], av[2]);
+        modify_node_env(env, av[1], av[2]);
     }
-    return env;
+    return;
+}
+
+static int parsing_src_is_alpha(char *src)
+{
+    if (!src)
+        return 1;
+    for (int i = 0; src[i]; i++) {
+        if (!((src[i] >= 'A' && src[i] <= 'Z') ||
+            (src[i] >= '0' && src[i] <= '9')))
+            return 1;
+    }
+    return 0;
+}
+
+static int check_alphanum(int len, char **data)
+{
+    if (len == 2) {
+        if (parsing_src_is_alpha(data[1]) == 1)
+            return 1;
+        return 0;
+    }
+    if (len == 3) {
+        if (parsing_src_is_alpha(data[1]) == 1)
+            return 1;
+        if (parsing_src_is_alpha(data[2]) == 1)
+            return 1;
+        return 0;
+    }
+    if (len > 3)
+        write(2, "setenv: Too many arguments.\n", 28);
+    return 1;
 }
 
 int main_setenv(int ac, char **av, struct env_var **env)
 {
-    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
-        av[1] && av[2]) {
-        (*env) = add_value_in_env(av, (*env));
+    if (check_alphanum(ac, av) == 1) {
+        write(2,
+        "setenv: Variable name must contain alphanumeric characters.\n", 60);
+        return 1;
+    }
+    if (ac == 3 && av[1] && av[2]) {
+        add_value_in_env(av, env);
         return 0;
     }
-    if (ac == 2 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
-        av[1]) {
-        (*env) = add_value_in_env(av, (*env));
+    if (ac == 2 && av[1]) {
+        add_value_in_env(av, env);
         return 0;
     }
-    if (ac == 1) {
-        print_env(*env);
+    if (ac == 1)
         return 0;
-    }
-    return 84;
+    return 1;
 }

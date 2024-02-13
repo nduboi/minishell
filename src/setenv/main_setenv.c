@@ -108,7 +108,8 @@ static int parsing_src_is_alpha(char *src)
         return 1;
     for (int i = 0; src[i]; i++) {
         if (!((src[i] >= 'A' && src[i] <= 'Z') ||
-            (src[i] >= '0' && src[i] <= '9')))
+            (src[i] >= '0' && src[i] <= '9') ||
+            (src[i] >= 'a' && src[i] <= 'z')))
             return 1;
     }
     return 0;

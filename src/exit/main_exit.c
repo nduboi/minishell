@@ -8,7 +8,7 @@
 #include "library.h"
 #include "minishell1.h"
 
-int main_exit(int ac, char **av, char ***env)
+int main_exit(int ac, char **av, env_var_t **env)
 {
     if (*env != NULL)
         *env = *env;

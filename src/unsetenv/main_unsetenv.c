@@ -8,42 +8,20 @@
 #include "library.h"
 #include "minishell1.h"
 
-static char **remove_data_line(int row, char **env, int table_len)
-{
-    char **result = malloc(sizeof(char *) * (table_len));
-    int i = 0;
-    int k = 0;
-
-    result[table_len - 1] = NULL;
-    for (; i < (table_len); k++) {
-        if (i == row)
-            k++;
-        if (!env[k])
-            return result;
-        result[i] = my_strdup(env[k]);
-        i++;
-    }
-    return result;
-}
-
-static void remove_this_name(char *src, char ***env)
+static void remove_this_name(char *src, env_var_t **env)
 {
     int row;
-    char **env_cpy = NULL;
-    char **env_cpy2 = NULL;
 
     if (!src || !(*env))
         return;
-    env_cpy = my_table_cpy(*env);
-    env_cpy2 = my_table_cpy(*env);
-    row = get_line_env(src, env_cpy);
+    row = get_line_env(src, *env);
     if (row == -1)
         return;
-    *env = remove_data_line(row, env_cpy2, my_array_len(env_cpy2));
+    delete_node(env, src);
     return;
 }
 
-static int research_environement(char **data, char ***env)
+static int research_environement(char **data, env_var_t **env)
 {
     int len_table = 0;
 
@@ -56,11 +34,10 @@ static int research_environement(char **data, char ***env)
     return 0;
 }
 
-int main_unsetenv(int ac, char **av, char ***env)
+int main_unsetenv(int ac, char **av, env_var_t **env)
 {
-    if (ac >= 2 && my_strcmp(av[0], "unsetenv") == 0) {
+    if (ac >= 2)
         return research_environement(av, env);
-    }
     if (ac < 2)
         return 1;
     return 0;

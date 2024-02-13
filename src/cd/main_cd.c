@@ -8,7 +8,7 @@
 #include "minishell1.h"
 #include "library.h"
 
-static int go_folder(char *src, char ***env)
+static int go_folder(char *src, struct env_var **env)
 {
     char *buffer = malloc(sizeof(char) * (BUFFER_SIZE));
     char **env_variables = fill_env_variables_oldpwd();
@@ -27,28 +27,28 @@ static int go_folder(char *src, char ***env)
             write(2, "Wrong directory\n", 16);
             return 1;
         }
-        (*env) = add_value_in_env(env_variables, (*env));
+        add_value_in_env(env_variables, env);
     }
     return 0;
 }
 
-int specific_cases(char **av, char ***env)
+int specific_cases(char **av, struct env_var **env)
 {
     if (my_strcmp(av[1], "~") == 0) {
-        return go_folder(get_env("HOME", my_table_cpy(*env)), env);
+        return go_folder(get_env("HOME", (*env)), env);
     }
     if (my_strcmp(av[1], "-") == 0) {
-        return go_folder(get_env("OLDPWD", my_table_cpy(*env)), env);
+        return go_folder(get_env("OLDPWD", (*env)), env);
     }
     return 1;
 }
 
-int main_cd(int ac, char **av, char ***env)
+int main_cd(int ac, char **av, struct env_var **env)
 {
-    if (ac == 1 && my_strcmp(av[0], "cd") == 0) {
-        return go_folder(get_env("HOME", my_table_cpy(*env)), env);
+    if (ac == 1) {
+        return go_folder(get_env("HOME", (*env)), env);
     }
-    if (ac == 2 && my_strcmp(av[0], "cd") == 0) {
+    if (ac == 2) {
         if (my_strcmp(av[1], "~") != 0 && my_strcmp(av[1], "-") != 0) {
             return go_folder(av[1], env);
         } else

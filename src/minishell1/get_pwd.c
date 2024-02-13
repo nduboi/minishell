@@ -31,21 +31,21 @@ char *replace_title_by_homedirectory(char *src, char *home)
     return result;
 }
 
-char *check_for_home_dir(char *path, char **env)
+char *check_for_home_dir(char *path, env_var_t *env)
 {
     char *base = NULL;
 
     if (my_strlen(path) >= 1) {
         if (path[0] == '~')
             base = replace_title_by_homedirectory(path, get_env("HOME",
-                my_table_cpy(env)));
+                env));
         else
             base = path;
     }
     return base;
 }
 
-char *get_pwd_file(char *src, char *path, char **env)
+char *get_pwd_file(char *src, char *path, env_var_t *env)
 {
     char *base;
     int len;

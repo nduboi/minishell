@@ -4,15 +4,13 @@
 ** File description:
 ** Write a function that splits a string into words.
 */
-#include <stdlib.h>
-#include <stdio.h>
 
 #include "library.h"
-#include <unistd.h>
+#include "minishell1.h"
 
 static int is_alphanum(char const str)
 {
-    if (str == ' ' || str == '\0') {
+    if (str == ' ' || str == '\t' || str == '\0') {
         return 1;
     }
     return 0;

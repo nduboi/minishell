@@ -15,7 +15,7 @@ static void free_obj(char **data, char *str)
     return;
 }
 
-int get_input_user(char **env)
+int get_input_user(env_var_t *env)
 {
     char *str;
     char **data;

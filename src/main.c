@@ -10,12 +10,15 @@
 
 int main(int ac, char **av, char **env)
 {
-    if (ac == 1 && my_strcmp(av[0], "./mysh") == 0) {
+    env_var_t *env_var = fill_environement(env);
+
+    (void)av;
+    if (ac == 1) {
         if (isatty(STDIN_FILENO)) {
-            return get_input_user(env);
+            return get_input_user(env_var);
         } else
-            return non_interactive(env);
+            return non_interactive(env_var);
     } else
-        return 84;
+        return 127;
     return 0;
 }

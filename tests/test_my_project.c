@@ -95,29 +95,30 @@ Test(check_correct_command, check_correct_command1, .init = redirect_all_std)
     char **env = malloc(sizeof(char *) * 2);
     env[0] = my_strdup("PATH=/usr/bin");
     env[1] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    check_correct_command(&cmds, data_ls, commands, env);
+    check_correct_command(&cmds, data_ls, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_cd, commands, env);
+    check_correct_command(&cmds, data_cd, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_nimp, commands, env);
+    check_correct_command(&cmds, data_nimp, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_env, commands, env);
+    check_correct_command(&cmds, data_env, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_setenv, commands, env);
+    check_correct_command(&cmds, data_setenv, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_unsetenv, commands, env);
+    check_correct_command(&cmds, data_unsetenv, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, NULL, commands, env);
+    check_correct_command(&cmds, NULL, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_NULL, commands, env);
+    check_correct_command(&cmds, data_NULL, commands, env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
     cr_assert_stdout_eq_str("2\n1\n84\n1\n1\n1\n0\n0\n");
@@ -130,8 +131,9 @@ Test(main_env, main_env1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_env(1, av, &env));
+    my_put_nbr(main_env(1, av, &env_variable));
     cr_assert_stdout_eq_str("coucou=noa\ntests=noa\n0");
 }
 
@@ -142,18 +144,20 @@ Test(main_env, main_env2, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_env(1, av, &env));
-    cr_assert_stdout_eq_str("84");
+    my_put_nbr(main_env(1, av, &env_variable));
+    cr_assert_stdout_eq_str("coucou=noa\ntests=noa\n0");
 }
 
 Test(main_env, main_env3, .init = redirect_all_std)
 {
     char *av[] = {"encafv", NULL};
     char **env = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_env(1, av, &env));
-    cr_assert_stdout_eq_str("84");
+    my_put_nbr(main_env(1, av, &env_variable));
+    cr_assert_stdout_eq_str("0");
 }
 
 Test(main_setenv, main_setenv1, .init = redirect_all_std)
@@ -163,10 +167,11 @@ Test(main_setenv, main_setenv1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(3, av, &env));
-    print_env(env);
-    cr_assert_stdout_eq_str("0coucou=ca va\ntests=noa\n");
+    my_put_nbr(main_setenv(3, av, &env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("1coucou=noa\ntests=noa\n");
 }
 
 Test(main_setenv, main_setenv2, .init = redirect_all_std)
@@ -180,9 +185,10 @@ Test(main_setenv, main_setenv2, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(3, av, &env));
-    print_env(env);
+    my_put_nbr(main_setenv(3, av, &env_variable));
+    print_env(env_variable);
     cr_assert_stdout_eq_str("0coucou=noa\ntests=noa\nOLDPWD=noa\n");
 }
 
@@ -198,10 +204,11 @@ Test(main_setenv, main_setenv4, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(4, av, &env));
-    print_env(env);
-    cr_assert_stdout_eq_str("84coucou=noa\ntests=noa\n");
+    my_put_nbr(main_setenv(4, av, &env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("1coucou=noa\ntests=noa\n");
 }
 
 Test(main_setenv, main_setenv5, .init = redirect_all_std)
@@ -215,24 +222,26 @@ Test(main_setenv, main_setenv5, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(3, av, &env));
-    print_env(env);
-    cr_assert_stdout_eq_str("84coucou=noa\ntests=noa\n");
+    my_put_nbr(main_setenv(3, av, &env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("0coucou=noa\ntests=noa\nOLDPWD=noa\n");
 }
 
 Test(main_setenv, main_setenv6, .init = redirect_all_std)
 {
     char **av = malloc(sizeof(char *) * 4);
-    av[0] = my_strdup("setenvne");
+    av[0] = my_strdup("setenv");
     av[1] = my_strdup("OLDPWD");
     av[2] = my_strdup("noa");
     av[3] = NULL;
     char **env = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(3, av, &env));
-    print_env(env);
-    cr_assert_stdout_eq_str("84");
+    my_put_nbr(main_setenv(3, av, &env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("0OLDPWD=noa\n");
 }
 
 Test(main_setenv, main_setenv7, .init = redirect_all_std)
@@ -246,10 +255,11 @@ Test(main_setenv, main_setenv7, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_setenv(3, av, &env));
-    print_env(env);
-    cr_assert_stdout_eq_str("84coucou=noa\ntests=noa\n");
+    my_put_nbr(main_setenv(3, av, &env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("1coucou=noa\ntests=noa\n");
 }
 
 
@@ -259,10 +269,11 @@ Test(get_line_env, get_line_env1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(get_line_env("azfbzbf", env));
-    print_env(env);
-    cr_assert_stdout_eq_str("-1coucou\ntests\n");
+    my_put_nbr(get_line_env("azfbzbf", env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("-1coucou=noa\ntests=noa\n");
 }
 
 Test(my_table_cpy, my_table_cpy1, .init = redirect_all_std)
@@ -271,9 +282,10 @@ Test(my_table_cpy, my_table_cpy1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(get_line_env("azfbzbf", my_table_cpy(env)));
-    print_env(env);
+    my_put_nbr(get_line_env("azfbzbf", env_variable));
+    print_env(env_variable);
     cr_assert_stdout_eq_str("-1coucou=noa\ntests=noa\n");
 }
 
@@ -283,11 +295,11 @@ Test(my_table_cpy, my_table_cpy2, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("tests=noa");
     env[2] = NULL;
-    char **cpy_table = my_table_cpy(env);
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(get_line_env("azfbzbf", cpy_table));
-    print_env(cpy_table);
-    cr_assert_stdout_eq_str("-1coucou\ntests\n");
+    my_put_nbr(get_line_env("azfbzbf", env_variable));
+    print_env(env_variable);
+    cr_assert_stdout_eq_str("-1coucou=noa\ntests=noa\n");
 }
 
 Test(main_cd, main_cd1, .init = redirect_all_std)
@@ -299,17 +311,18 @@ Test(main_cd, main_cd1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=tests");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
-    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
     getcwd(buffer, 300);
-    if (my_strcmp(buffer, get_env("HOME", my_table_cpy(env))))
+    if (my_strcmp(buffer, get_env("HOME", env_variable)))
         my_put_nbr(0);
     else
         my_put_nbr(1);
-    print_env(env);
+    print_env(env_variable);
     char final_str[100];
     strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
     strcat(final_str, "\n");
@@ -326,17 +339,18 @@ Test(main_cd, main_cd2, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=tests");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
-    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
     getcwd(buffer, 300);
-    if (my_strcmp(buffer, get_env("HOME", my_table_cpy(env))))
+    if (my_strcmp(buffer, get_env("HOME", env_variable)))
         my_put_nbr(0);
     else
         my_put_nbr(1);
-    print_env(env);
+    print_env(env_variable);
     char final_str[100];
     strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
     strcat(final_str, "\n");
@@ -353,17 +367,18 @@ Test(main_cd, main_cd3, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("OLDPWD=tests");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
-    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
     getcwd(buffer, 300);
-    if (my_strcmp(buffer, get_env("OLDPWD", my_table_cpy(env))))
+    if (my_strcmp(buffer, get_env("OLDPWD", env_variable)))
         my_put_nbr(0);
     else
         my_put_nbr(1);
-    print_env(env);
+    print_env(env_variable);
     char final_str[100];
     strcat(strcpy(final_str, "00coucou=noa\nOLDPWD="), old_path);
     strcat(final_str, "\n");
@@ -380,17 +395,18 @@ Test(main_cd, main_cd4, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=tests");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
-    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
     getcwd(buffer, 300);
     if (my_strcmp(buffer, "tests"))
         my_put_nbr(0);
     else
         my_put_nbr(1);
-    print_env(env);
+    print_env(env_variable);
     char final_str[100];
     strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
     strcat(final_str, "\n");
@@ -408,8 +424,9 @@ Test(main_cd, main_cd5, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=tests");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_put_nbr(main_cd(my_array_len(av), av, &env));
+    my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
     cr_assert_stdout_eq_str("1");
 }
 
@@ -448,7 +465,7 @@ Test(replace_title_by_homedirectory, replace_title_by_homedirectory2, .init = re
 }
 
 
-char *check_for_home_dir(char *path, char **env);
+char *check_for_home_dir(char *path, struct env_var *env_variable);
 
 Test(check_for_home_dir, check_for_home_dir1, .init = redirect_all_std)
 {
@@ -456,8 +473,9 @@ Test(check_for_home_dir, check_for_home_dir1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    my_putstr(check_for_home_dir("~/my_script", env));
+    my_putstr(check_for_home_dir("~/my_script", env_variable));
     cr_assert_stdout_eq_str("/home/roussierenoa/my_script");
 }
 
@@ -467,8 +485,9 @@ Test(get_pwd_file, get_pwd_file1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
 
-    if (!(get_pwd_file(NULL, "nana", env))) {
+    if (!(get_pwd_file(NULL, "nana", env_variable))) {
         my_put_nbr(0);
     } else {
         my_put_nbr(1);
@@ -482,11 +501,12 @@ Test(main_exit, main_exit1, .init = redirect_all_std, .exit_code = 0)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 2);
     av[0] = my_strdup("exit");
     av[1] = NULL;
 
-    main_exit(1, av, &env);
+    main_exit(1, av, &env_variable);
     cr_assert_stdout_eq_str("");
 }
 
@@ -496,12 +516,13 @@ Test(main_exit, main_exit3, .init = redirect_all_std, .exit_code = 34)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 3);
     av[0] = my_strdup("exit");
     av[1] = my_strdup("34");
     av[2] = NULL;
 
-    main_exit(2, av, &env);
+    main_exit(2, av, &env_variable);
     cr_assert_stdout_eq_str("");
 }
 
@@ -511,13 +532,14 @@ Test(main_unsetenv, main_unsetenv1, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 3);
     av[0] = my_strdup("unsetenv");
     av[1] = my_strdup("HOME");
     av[2] = NULL;
 
-    main_unsetenv(2, av, &env);
-    print_env(env);
+    main_unsetenv(2, av, &env_variable);
+    print_env(env_variable);
     cr_assert_stdout_eq_str("coucou=noa\n");
 }
 
@@ -527,14 +549,15 @@ Test(main_unsetenv, main_unsetenv2, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 4);
     av[0] = my_strdup("unsetenv");
     av[1] = my_strdup("HOME");
     av[2] = my_strdup("coucou");
     av[3] = NULL;
 
-    main_unsetenv(my_array_len(av), av, &env);
-    print_env(env);
+    main_unsetenv(my_array_len(av), av, &env_variable);
+    print_env(env_variable);
     cr_assert_stdout_eq_str("");
 }
 
@@ -544,13 +567,14 @@ Test(main_unsetenv, main_unsetenv3, .init = redirect_all_std)
     env[0] = my_strdup("coucou=noa");
     env[1] = my_strdup("HOME=/home/roussierenoa");
     env[2] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 3);
     av[0] = my_strdup("unsetenv");
     av[1] = my_strdup("neo");
     av[2] = NULL;
 
-    main_unsetenv(my_array_len(av), av, &env);
-    print_env(env);
+    main_unsetenv(my_array_len(av), av, &env_variable);
+    print_env(env_variable);
     cr_assert_stdout_eq_str("coucou=noa\nHOME=/home/roussierenoa\n");
 }
 
@@ -558,12 +582,13 @@ Test(main_unsetenv, main_unsetenv4, .init = redirect_all_std)
 {
     char **env = malloc(sizeof(char *) * 1);
     env[0] = NULL;
+    struct env_var *env_variable = fill_environement(env);
     char **av = malloc(sizeof(char *) * 3);
     av[0] = my_strdup("unsetenv");
     av[1] = my_strdup("neo");
     av[2] = NULL;
 
-    main_unsetenv(my_array_len(av), av, &env);
-    print_env(env);
+    main_unsetenv(my_array_len(av), av, &env_variable);
+    print_env(env_variable);
     cr_assert_stdout_eq_str("");
 }

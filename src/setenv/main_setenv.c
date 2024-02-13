@@ -8,50 +8,6 @@
 #include "minishell1.h"
 #include "library.h"
 
-static char *add_name_value(char *name, char *value, char *result)
-{
-    int len_name;
-    int len_value;
-
-    if (name && value) {
-        len_value = my_strlen(value);
-        len_name = my_strlen(name);
-        result = malloc(sizeof(char) * (len_name + 1 + len_value + 1));
-        for (int i = 0; i < len_name; i++) {
-            result[i] = name[i];
-        }
-        result[len_name] = '=';
-        for (int i = 0; i < len_value; i++) {
-            result[i + len_name + 1] = value[i];
-        }
-    }
-    return result;
-}
-
-static char *add_name(char *name, char *value, char *result)
-{
-    int len_name;
-
-    if (name && !value) {
-        len_name = my_strlen(name);
-        result = malloc(sizeof(char) * (len_name + 2));
-        for (int i = 0; i < len_name; i++) {
-            result[i] = name[i];
-        }
-        result[len_name] = '=';
-    }
-    return result;
-}
-
-static char *put_new_env(char *name, char *value)
-{
-    char *result = NULL;
-
-    result = add_name_value(name, value, result);
-    result = add_name(name, value, result);
-    return result;
-}
-
 char **my_table_cpy(char **src)
 {
     char **result = NULL;
@@ -68,51 +24,132 @@ char **my_table_cpy(char **src)
     return result;
 }
 
-char **realloc_env(char **env, int nbr_moreline, char *name, char *value)
+static void add_value_name_node(char *name, char *value, struct env_var *temp,
+    struct env_var **env)
 {
-    char **cpy_env = my_table_cpy(env);
-    int len = my_array_len(env);
+    struct env_var *elements;
 
-    env = NULL;
-    env = malloc(sizeof(char *) * (len + nbr_moreline + 1));
-    for (int i = 0; i < len; i++) {
-        env[i] = cpy_env[i];
+    if (name && value) {
+        elements = malloc(sizeof(env_var_t) * 1);
+        elements->name = my_strdup(name);
+        elements->value = my_strdup(value);
+        elements->next = NULL;
+        if (temp)
+            temp->next = elements;
+        else
+            *env = elements;
     }
-    env[len] = put_new_env(name, value);
-    env[len + nbr_moreline + 1] = NULL;
-    return env;
+    return;
 }
 
-static char **modify_env_file(char **env, char *name, char *value)
+static void add_name_node(char *name, char *value, struct env_var *temp,
+    struct env_var **env)
 {
-    int nbr_line = 0;
+    struct env_var *elements;
 
-    nbr_line = get_line_env(name, my_table_cpy(env));
-    env[nbr_line] = put_new_env(name, value);
-    return env;
+    if (name && !value) {
+        elements = malloc(sizeof(env_var_t) * 1);
+        elements->name = my_strdup(name);
+        elements->next = NULL;
+        if (temp)
+            temp->next = elements;
+        else
+            *env = elements;
+    }
+    return;
 }
 
-char **add_value_in_env(char **av, char **env)
+void add_node_env(struct env_var **env, char *name, char *value)
 {
-    if (get_line_env(av[1], my_table_cpy(env)) == -1) {
-        env = realloc_env(env, 1, av[1], av[2]);
+    struct env_var *temp = *env;
+
+    if (temp)
+        while (temp->next)
+            temp = temp->next;
+    add_value_name_node(name, value, temp, env);
+    add_name_node(name, value, temp, env);
+    return;
+}
+
+static void check_free_node(struct env_var *elements)
+{
+    if (elements->value)
+        free(elements->value);
+    return;
+}
+
+void modify_node_env(struct env_var **env, char *name, char *value)
+{
+    struct env_var *elements = *env;
+
+    while (elements) {
+        if (my_strcmp(elements->name, name) == 0) {
+            check_free_node(elements);
+            elements->value = my_strdup(value);
+        }
+        elements = elements->next;
+    }
+    return;
+}
+
+void add_value_in_env(char **av, struct env_var **env)
+{
+    if (get_line_env(av[1], *env) == -1) {
+        add_node_env(env, av[1], av[2]);
     } else {
-        env = modify_env_file(env, av[1], av[2]);
+        modify_node_env(env, av[1], av[2]);
     }
-    return env;
+    return;
 }
 
-int main_setenv(int ac, char **av, char ***env)
+static int parsing_src_is_alpha(char *src)
 {
-    if (ac == 3 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
-        av[1] && av[2]) {
-        (*env) = add_value_in_env(av, (*env));
+    if (!src)
+        return 1;
+    for (int i = 0; src[i]; i++) {
+        if (!((src[i] >= 'A' && src[i] <= 'Z') ||
+            (src[i] >= '0' && src[i] <= '9') ||
+            (src[i] >= 'a' && src[i] <= 'z')))
+            return 1;
+    }
+    return 0;
+}
+
+static int check_alphanum(int len, char **data)
+{
+    if (len == 2) {
+        if (parsing_src_is_alpha(data[1]) == 1)
+            return 1;
         return 0;
     }
-    if (ac == 2 && my_strcmp(av[0], "setenv") == 0 && (*env) &&
-        av[1]) {
-        (*env) = add_value_in_env(av, (*env));
+    if (len == 3) {
+        if (parsing_src_is_alpha(data[1]) == 1)
+            return 1;
+        if (parsing_src_is_alpha(data[2]) == 1)
+            return 1;
         return 0;
     }
-    return 84;
+    if (len > 3)
+        write(2, "setenv: Too many arguments.\n", 28);
+    return 1;
+}
+
+int main_setenv(int ac, char **av, struct env_var **env)
+{
+    if (check_alphanum(ac, av) == 1) {
+        write(2,
+        "setenv: Variable name must contain alphanumeric characters.\n", 60);
+        return 1;
+    }
+    if (ac == 3 && av[1] && av[2]) {
+        add_value_in_env(av, env);
+        return 0;
+    }
+    if (ac == 2 && av[1]) {
+        add_value_in_env(av, env);
+        return 0;
+    }
+    if (ac == 1)
+        return 0;
+    return 1;
 }

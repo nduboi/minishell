@@ -13,6 +13,8 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/minishell1/check_command.c	\
 		src/minishell1/get_pwd.c 	\
 		src/minishell1/my_str_to_word_array.c	\
+		src/env/str_to_word_array.c	\
+		src/env/my_strcpy.c	\
 		src/minishell1/my_str_to_word_array_pwd.c	\
 		src/minishell1/start_comands.c	\
 		src/minishell1/non_interactive.c	\
@@ -25,6 +27,8 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/env/print_env.c	\
 		src/setenv/main_setenv.c	\
 		src/env/fill_env.c	\
+		src/unsetenv/delete_node.c	\
+		src/minishell1/my_linked_list_to_table.c	\
 
 FILE_MAIN =	src/main.c	\
 
@@ -44,17 +48,18 @@ OBJ_FILE_MAIN_TESTS = $(FILE_MAIN_TESTS:.c=.o)
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDES = -I ./includes -I ./Library/includes/ -L./ -lext
+INCLUDES = -I ./includes -I ./library/includes/ -L./ -lext
 
-CFLAGS += -Wall -Wextra -Werror $(INCLUDES)
+CFLAGS += -Wall -Wextra -Werror $(INCLUDES) -g
 
 all: $(LIB) $(NAME)
 
 $(LIB):
-	make -C Library
+	make -C library
 
 $(NAME): $(LIB) $(OBJ) $(OBJ_FILE_MAIN)
 	gcc -o $(NAME) $(OBJ) $(OBJ_FILE_MAIN) $(CFLAGS)
+	cp $(NAME) tester/$(NAME)
 
 re: fclean $(NAME)
 
@@ -64,12 +69,13 @@ clean:
 	rm -f $(OBJ_FILE_TESTS)
 	rm -f *.gcno
 	rm -f *.gcda
-	make clean -C Library
+	make clean -C library
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f tester/$(NAME)
 	rm -f unit_tests
-	make fclean -C Library
+	make fclean -C library
 
 tests: $(LIB) $(OBJ) $(OBJ_FILE_MAIN_TESTS)
 	gcc -o tests_file $(OBJ) $(OBJ_FILE_MAIN_TESTS) $(CFLAGS)

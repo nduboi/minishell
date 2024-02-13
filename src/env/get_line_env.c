@@ -8,14 +8,16 @@
 #include "minishell1.h"
 #include "library.h"
 
-int get_line_env(char *name, char **env)
+int get_line_env(char *name, struct env_var *env)
 {
     int row = 0;
+    struct env_var *elements = env;
 
-    for (; env[row]; row++) {
-        if (my_strcmp(strtok(env[row], "="), name) == 0) {
+    for (; elements; row++) {
+        if (my_strcmp(elements->name, name) == 0) {
             return row;
         }
+        elements = elements->next;
     }
     return -1;
 }

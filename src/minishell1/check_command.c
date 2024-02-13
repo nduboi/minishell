@@ -8,15 +8,23 @@
 #include "minishell1.h"
 #include "library.h"
 
+int content_slash(char *src)
+{
+    for (int i = 0; src[i] != '\0'; i++) {
+        if (src[i] == '/')
+            return 1;
+    }
+    return 0;
+}
+
 static int check_own_cmd(char *src, int *cmds)
 {
     struct stat buffer;
     int cmd = 0;
 
-    if (src[0] == '.' && src[1] == '/') {
+    if (content_slash(src))
         if (!(stat(src, &buffer) == -1))
             cmd = 1;
-    }
     if (cmd == 1) {
         if (access(src, X_OK) == -1) {
             perror("errno");
@@ -47,11 +55,11 @@ static int check_acces(char *src, int *cmds)
     return 0;
 }
 
-static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
+static int check_internal_cmd(char *pwd, char *src, int *cmds, env_var_t *env)
 {
     struct stat buffer;
     char **data_path = my_str_to_word_array_pwd(get_env("PATH",
-        my_table_cpy(env)));
+        env));
     int len = my_array_len(data_path);
 
     if (check_error(len) == 1)
@@ -70,7 +78,7 @@ static int check_internal_cmd(char *pwd, char *src, int *cmds, char **env)
     return 0;
 }
 
-int check_commands(char *src, int *cmds, char **env)
+int check_commands(char *src, int *cmds, env_var_t *env)
 {
     char *pwd = malloc(sizeof(char *) * 1);
 
@@ -105,7 +113,7 @@ static void write_error_cmd(char *src)
 }
 
 void check_correct_command(int *cmds, char **data, commands_t *commands,
-    char **env)
+    env_var_t *env)
 {
     commands_t *elements = commands;
 

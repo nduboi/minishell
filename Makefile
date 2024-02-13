@@ -27,6 +27,8 @@ SRC	=	src/minishell1/get_input_user.c	\
 		src/env/print_env.c	\
 		src/setenv/main_setenv.c	\
 		src/env/fill_env.c	\
+		src/unsetenv/delete_node.c	\
+		src/minishell1/my_linked_list_to_table.c	\
 
 FILE_MAIN =	src/main.c	\
 

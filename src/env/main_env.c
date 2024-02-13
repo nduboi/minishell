@@ -8,7 +8,7 @@
 #include "minishell1.h"
 #include "library.h"
 
-int main_env(int ac, char **av, char ***env)
+int main_env(int ac, char **av, struct env_var **env)
 {
     if (!(*env))
         return 84;

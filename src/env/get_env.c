@@ -8,18 +8,25 @@
 #include "minishell1.h"
 #include "library.h"
 
-char *get_env(char *src, char **env)
+static int check_if_good_value(env_var_t *elements, char *src)
 {
-    char *result = NULL;
+    if (elements->value && elements->name) {
+        if (my_strcmp(elements->name, src) == 0)
+            return 0;
+    }
+    return 1;
+}
 
-    if (!env)
+char *get_env(char *src, struct env_var *env)
+{
+    env_var_t *elements = env;
+
+    if (!elements)
         return NULL;
-    for (int i = 0; env[i]; i++) {
-        result = strtok(env[i], "=");
-        if (my_strcmp(result, src) == 0) {
-            result = strtok(NULL, "\n");
-            return result;
-        }
+    while (elements) {
+        if (check_if_good_value(elements, src) == 0)
+            return elements->value;
+        elements = elements->next;
     }
     return NULL;
 }

@@ -8,7 +8,7 @@
 #include "minishell1.h"
 #include "library.h"
 
-int non_interactive(char **env)
+int non_interactive(env_var_t *env)
 {
     char *str = NULL;
     char **data = NULL;

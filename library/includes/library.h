@@ -17,7 +17,6 @@ int my_put_nbr(int nb);
 void my_putchar(char c);
 int my_putstr(char const *str);
 int my_puterror(char const *str);
-char **my_str_to_word_array(char const *str);
 int my_strcmp(const char *first, const char *second);
 char *my_strdup(char *src);
 int my_strlen(char const *str);

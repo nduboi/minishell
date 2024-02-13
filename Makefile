@@ -48,14 +48,14 @@ OBJ_FILE_MAIN_TESTS = $(FILE_MAIN_TESTS:.c=.o)
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDES = -I ./includes -I ./Library/includes/ -L./ -lext
+INCLUDES = -I ./includes -I ./library/includes/ -L./ -lext
 
 CFLAGS += -Wall -Wextra -Werror $(INCLUDES) -g
 
 all: $(LIB) $(NAME)
 
 $(LIB):
-	make -C Library
+	make -C library
 
 $(NAME): $(LIB) $(OBJ) $(OBJ_FILE_MAIN)
 	gcc -o $(NAME) $(OBJ) $(OBJ_FILE_MAIN) $(CFLAGS)
@@ -69,13 +69,13 @@ clean:
 	rm -f $(OBJ_FILE_TESTS)
 	rm -f *.gcno
 	rm -f *.gcda
-	make clean -C Library
+	make clean -C library
 
 fclean: clean
 	rm -f $(NAME)
 	rm -f tester/$(NAME)
 	rm -f unit_tests
-	make fclean -C Library
+	make fclean -C library
 
 tests: $(LIB) $(OBJ) $(OBJ_FILE_MAIN_TESTS)
 	gcc -o tests_file $(OBJ) $(OBJ_FILE_MAIN_TESTS) $(CFLAGS)

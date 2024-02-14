@@ -33,7 +33,7 @@ static void wait_input_user(int read, commands_t *commands, int *cmds,
     read = getline(&str, &len, stdin);
     str[my_strlen(str) - 1] = '\0';
     while (read != -1) {
-        if (my_strlen(str) == 0 || *cmds == 1)
+        if (my_strlen(str) == 0 || (isatty(STDIN_FILENO) == 0 && *cmds == 1))
             break;
         *cmds = execute_action(str, data, commands, env);
         if (isatty(STDIN_FILENO))

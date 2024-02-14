@@ -97,28 +97,28 @@ Test(check_correct_command, check_correct_command1, .init = redirect_all_std)
     env[1] = NULL;
     struct env_var *env_variable = fill_environement(env);
 
-    check_correct_command(&cmds, data_ls, commands, env_variable);
+    check_correct_command(&cmds, data_ls, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_cd, commands, env_variable);
+    check_correct_command(&cmds, data_cd, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_nimp, commands, env_variable);
+    check_correct_command(&cmds, data_nimp, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_env, commands, env_variable);
+    check_correct_command(&cmds, data_env, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_setenv, commands, env_variable);
+    check_correct_command(&cmds, data_setenv, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_unsetenv, commands, env_variable);
+    check_correct_command(&cmds, data_unsetenv, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, NULL, commands, env_variable);
+    check_correct_command(&cmds, NULL, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
-    check_correct_command(&cmds, data_NULL, commands, env_variable);
+    check_correct_command(&cmds, data_NULL, commands, &env_variable);
     my_put_nbr(cmds);
     my_putchar('\n');
     cr_assert_stdout_eq_str("2\n1\n84\n1\n1\n1\n0\n0\n");
@@ -314,6 +314,7 @@ Test(main_cd, main_cd1, .init = redirect_all_std)
     struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
+    char *path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
     my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
@@ -324,7 +325,8 @@ Test(main_cd, main_cd1, .init = redirect_all_std)
         my_put_nbr(1);
     print_env(env_variable);
     char final_str[100];
-    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
+    getcwd(path, 300);
+    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nPWD="), path);
     strcat(final_str, "\n");
     cr_assert_stdout_eq_str(final_str);
 }
@@ -342,6 +344,7 @@ Test(main_cd, main_cd2, .init = redirect_all_std)
     struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
+    char *path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
     my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
@@ -352,7 +355,8 @@ Test(main_cd, main_cd2, .init = redirect_all_std)
         my_put_nbr(1);
     print_env(env_variable);
     char final_str[100];
-    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
+    getcwd(path, 300);
+    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nPWD="), path);
     strcat(final_str, "\n");
     cr_assert_stdout_eq_str(final_str);
 }
@@ -365,11 +369,12 @@ Test(main_cd, main_cd3, .init = redirect_all_std)
     av[2] = NULL;
     char **env = malloc(sizeof(char *) * 3);
     env[0] = my_strdup("coucou=noa");
-    env[1] = my_strdup("OLDPWD=tests");
+    env[1] = my_strdup("1OLDPWD=tests");
     env[2] = NULL;
     struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
+    char *now_path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
     my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
@@ -380,7 +385,8 @@ Test(main_cd, main_cd3, .init = redirect_all_std)
         my_put_nbr(1);
     print_env(env_variable);
     char final_str[100];
-    strcat(strcpy(final_str, "00coucou=noa\nOLDPWD="), old_path);
+    getcwd(now_path, 300);
+    strcat(strcpy(final_str, "00coucou=noa\nPWD="), now_path);
     strcat(final_str, "\n");
     cr_assert_stdout_eq_str(final_str);
 }
@@ -398,6 +404,7 @@ Test(main_cd, main_cd4, .init = redirect_all_std)
     struct env_var *env_variable = fill_environement(env);
     char *buffer = malloc(sizeof(char) * 300);
     char *old_path = malloc(sizeof(char) * 300);
+    char *path = malloc(sizeof(char) * 300);
 
     getcwd(old_path, 300);
     my_put_nbr(main_cd(my_array_len(av), av, &env_variable));
@@ -408,7 +415,8 @@ Test(main_cd, main_cd4, .init = redirect_all_std)
         my_put_nbr(1);
     print_env(env_variable);
     char final_str[100];
-    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nOLDPWD="), old_path);
+    getcwd(path, 300);
+    strcat(strcpy(final_str, "00coucou=noa\nHOME=tests\nPWD="), path);
     strcat(final_str, "\n");
     cr_assert_stdout_eq_str(final_str);
 }

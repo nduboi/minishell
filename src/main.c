@@ -14,11 +14,8 @@ int main(int ac, char **av, char **env)
 
     (void)av;
     if (ac == 1) {
-        if (isatty(STDIN_FILENO)) {
-            return get_input_user(env_var);
-        } else
-            return non_interactive(env_var);
+        return non_interactive(env_var);
     } else
-        return 127;
+        return 1;
     return 0;
 }

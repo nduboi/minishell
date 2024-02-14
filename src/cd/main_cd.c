@@ -13,10 +13,6 @@ static int go_folder(char *src, struct env_var **env)
     char *buffer = malloc(sizeof(char) * (BUFFER_SIZE));
     char **env_variables = fill_env_variables_oldpwd();
 
-    if (!(src)) {
-        write(2, "Error with the to the target\n", 29);
-        return 1;
-    }
     getcwd(buffer, (BUFFER_SIZE));
     env_variables[2] = buffer;
     if (opendir(src) == NULL) {
@@ -27,7 +23,6 @@ static int go_folder(char *src, struct env_var **env)
         if (chdir(src) == -1) {
             write(2, src, my_strlen(src));
             write(2, ": No such file or directory.\n", 29);
-            exit(1);
             return 1;
         }
         add_value_in_env(env_variables, env);

@@ -13,7 +13,19 @@ char **fill_env_variables_oldpwd(void)
     char **env_variables = malloc(sizeof(char *) * 4);
 
     env_variables[0] = my_strdup("setenv");
-    env_variables[1] = my_strdup("OLDPWD");
+    env_variables[1] = my_strdup("1OLDPWD");
+    env_variables[2] = NULL;
+    env_variables[3] = NULL;
+    return env_variables;
+}
+
+char **fill_env_variables_pwd(void)
+{
+    char **env_variables = malloc(sizeof(char *) * 4);
+
+    env_variables[0] = my_strdup("setenv");
+    env_variables[1] = my_strdup("PWD");
+    env_variables[2] = NULL;
     env_variables[3] = NULL;
     return env_variables;
 }

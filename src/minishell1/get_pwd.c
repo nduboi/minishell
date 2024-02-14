@@ -52,7 +52,7 @@ char *get_pwd_file(char *src, char *path, env_var_t *env)
     int lenbase;
     char *result;
 
-    if (!src || !path || !env)
+    if (!src || !path)
         return NULL;
     len = my_strlen(src);
     base = check_for_home_dir(path, env);

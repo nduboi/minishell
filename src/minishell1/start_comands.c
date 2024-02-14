@@ -29,17 +29,22 @@ int execute_in_commands_struct(commands_t *commands, char **data,
     return 1;
 }
 
+static void use_preset_path(char ***data_path)
+{
+    *data_path = my_str_to_word_array_pwd(
+        "/usr/local/bin:/usr/bsd:/bin:/usr/bin");
+}
+
 static int execute_env_path(char **data, env_var_t **env)
 {
     char **data_path = my_str_to_word_array_pwd(get_env("PATH",
         (*env)));
-    int len_array = my_array_len(data_path);
+    int len_array;
     char **env_table = my_linked_list_to_table(*env);
 
-    if (!data_path) {
-        write(2, "Error with path environement variable\n", 38);
-        return 1;
-    }
+    if (!data_path)
+        use_preset_path(&data_path);
+    len_array = my_array_len(data_path);
     if (my_strlen(data[0]) > 2) {
         if (content_slash(data[0]) == 1) {
             execve(data[0], data, env_table);

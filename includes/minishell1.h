@@ -22,10 +22,9 @@
     #define MAXLEN  100
     #define BUFFER_SIZE 300
 
-int get_input_user(env_var_t *env);
 void fill_struct(commands_t **commands);
 void check_correct_command(int *cmds, char **data, commands_t *commands,
-    env_var_t *env);
+    env_var_t **env);
 char *get_pwd_file(char *src, char *path, env_var_t *env);
 char **my_str_to_word_array(char const *str);
 char **my_str_to_word_array_pwd(char const *str);
@@ -48,6 +47,7 @@ void print_env(env_var_t *env);
 char **my_table_cpy(char **src);
 char *my_str_cpy(char *src);
 char **fill_env_variables_oldpwd(void);
+char **fill_env_variables_pwd(void);
 env_var_t *fill_environement(char **env);
 void print_env_struct(env_var_t *env);
 char **my_linked_list_to_table(env_var_t *env);

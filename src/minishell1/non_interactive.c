@@ -9,19 +9,19 @@
 #include "library.h"
 
 static int execute_action(char *str, char **data, commands_t *commands,
-    env_var_t *env)
+    env_var_t **env)
 {
     int cmds = 0;
 
     data = my_str_to_word_array(str);
     check_correct_command(&cmds, data, commands, env);
     if (cmds != 0 && cmds != 84)
-        return start_commands(data, cmds, commands, &env);
+        return start_commands(data, cmds, commands, env);
     return cmds;
 }
 
 static void wait_input_user(int read, commands_t *commands, int *cmds,
-    env_var_t *env)
+    env_var_t **env)
 {
     char *str = NULL;
     char **data = NULL;
@@ -50,7 +50,7 @@ int non_interactive(env_var_t *env)
     commands_t *commands = NULL;
 
     fill_struct(&commands);
-    wait_input_user(read, commands, &cmds, env);
+    wait_input_user(read, commands, &cmds, &env);
     if (cmds == 84)
         return 1;
     return cmds;

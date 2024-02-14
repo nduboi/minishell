@@ -8,8 +8,7 @@
 .DEFAULT_GOAL := all
 .PHONY: clean ALL fclean re unit_tests tests_run
 
-SRC	=	src/minishell1/get_input_user.c	\
-		src/minishell1/fill_struct.c	\
+SRC	=	src/minishell1/fill_struct.c	\
 		src/minishell1/check_command.c	\
 		src/minishell1/get_pwd.c 	\
 		src/minishell1/my_str_to_word_array.c	\

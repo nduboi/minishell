@@ -55,13 +55,21 @@ static int check_acces(char *src, int *cmds)
     return 0;
 }
 
+static int use_preset_path(char ***data_path)
+{
+    *data_path = my_str_to_word_array_pwd(
+        "/usr/local/bin:/usr/bsd:/bin:/usr/bin");
+    return my_array_len(*data_path);
+}
+
 static int check_internal_cmd(char *pwd, char *src, int *cmds, env_var_t *env)
 {
     struct stat buffer;
-    char **data_path = my_str_to_word_array_pwd(get_env("PATH",
-        env));
+    char **data_path = my_str_to_word_array_pwd(get_env("PATH", env));
     int len = my_array_len(data_path);
 
+    if (!data_path)
+        len = use_preset_path(&data_path);
     if (check_error(len) == 1)
         return 1;
     for (int i = 0; i < len; i++) {
@@ -113,7 +121,7 @@ static void write_error_cmd(char *src)
 }
 
 void check_correct_command(int *cmds, char **data, commands_t *commands,
-    env_var_t *env)
+    env_var_t **env)
 {
     commands_t *elements = commands;
 
@@ -130,7 +138,7 @@ void check_correct_command(int *cmds, char **data, commands_t *commands,
         }
         elements = elements->next;
     }
-    if (check_commands(data[0], cmds, env) == 1) {
+    if (check_commands(data[0], cmds, *env) == 1) {
         *cmds = 84;
         write_error_cmd(data[0]);
     }

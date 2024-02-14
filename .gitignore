@@ -16,5 +16,6 @@ unit_tests
 settings.json
 bonus/clients
 bonus/servers
-tester/*
+tests/*.sh
+tester/README
 segfault*

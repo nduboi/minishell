@@ -59,7 +59,6 @@ $(LIB):
 
 $(NAME): $(LIB) $(OBJ) $(OBJ_FILE_MAIN)
 	gcc -o $(NAME) $(OBJ) $(OBJ_FILE_MAIN) $(CFLAGS)
-	cp $(NAME) tester/$(NAME)
 
 re: fclean $(NAME)
 

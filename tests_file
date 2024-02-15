@@ -220,3 +220,62 @@ TESTS=
   echo " ls -l -a"
 [922-END]
 
+[923]
+NAME="Setenv normal"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv noa noa"
+[923-END]
+
+[924]
+NAME="Setenv with one argument"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv noa"
+[924-END]
+
+[925]
+NAME="Setenv with a lot of argument"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv noa noa noa noa noa"
+[925-END]
+
+[926]
+NAME="unsetenv with one argument correct"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv noa"
+  echo "unsetenv noa"
+[926-END]
+
+[927]
+NAME="unsetenv with one argument incorrect"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv noa"
+  echo "unsetenv nqqdqdoa"
+[927-END]
+
+[928]
+NAME="unsetenv with nothing"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "unsetenv"
+[928-END]
+
+[929]
+NAME="setenv with nothing (Error normal, env different btw tcsh and mysh) check_output and exit message !"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "setenv"
+[929-END]
+
+

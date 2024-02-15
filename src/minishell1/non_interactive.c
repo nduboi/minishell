@@ -8,25 +8,29 @@
 #include "minishell1.h"
 #include "library.h"
 
-static int execute_action(char *str, char **data, commands_t *commands,
-    env_var_t **env)
+static int execute_action(char *str, commands_t *commands,
+    env_var_t **env, env_var_t *cpy_env)
 {
     int cmds = 0;
+    char **data = NULL;
 
     data = my_str_to_word_array(str);
-    check_correct_command(&cmds, data, commands, env);
-    if (cmds != 0 && cmds != 84)
-        return start_commands(data, cmds, commands, env);
+    cmds = check_correct_command(data, commands, env, cpy_env);
+    if (cmds == 1)
+        return buildinprgm(data, commands, env, cpy_env);
+    if (cmds == 2)
+        return native_prgrm(data, env);
     return cmds;
 }
 
-static void wait_input_user(int read, commands_t *commands, int *cmds,
-    env_var_t **env)
+static void wait_input_user(int read, int *cmds,
+    env_var_t **env, env_var_t *cpy_env)
 {
     char *str = NULL;
-    char **data = NULL;
     size_t len;
+    commands_t *commands = NULL;
 
+    fill_struct(&commands);
     *cmds = 0;
     if (isatty(STDIN_FILENO))
         write(1, "$> ", 3);
@@ -35,7 +39,7 @@ static void wait_input_user(int read, commands_t *commands, int *cmds,
     while (read != -1) {
         if (my_strlen(str) == 0 || (isatty(STDIN_FILENO) == 0 && *cmds == 1))
             break;
-        *cmds = execute_action(str, data, commands, env);
+        *cmds = execute_action(str, commands, env, cpy_env);
         if (isatty(STDIN_FILENO))
             write(1, "$> ", 3);
         read = getline(&str, &len, stdin);
@@ -43,14 +47,12 @@ static void wait_input_user(int read, commands_t *commands, int *cmds,
     }
 }
 
-int non_interactive(env_var_t *env)
+int non_interactive(env_var_t *env, env_var_t *cpy_env)
 {
     int read = 0;
     int cmds = 0;
-    commands_t *commands = NULL;
 
-    fill_struct(&commands);
-    wait_input_user(read, commands, &cmds, &env);
+    wait_input_user(read, &cmds, &env, cpy_env);
     if (cmds == 84)
         return 1;
     return cmds;

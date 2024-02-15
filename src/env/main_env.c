@@ -8,8 +8,9 @@
 #include "minishell1.h"
 #include "library.h"
 
-int main_env(int ac, char **av, struct env_var **env)
+int main_env(int ac, char **av, struct env_var **env, env_var_t *cpy_env)
 {
+    (void)cpy_env;
     if (!*env)
         return 0;
     (void)av;

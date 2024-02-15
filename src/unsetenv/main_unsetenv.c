@@ -34,8 +34,9 @@ static int research_environement(char **data, env_var_t **env)
     return 0;
 }
 
-int main_unsetenv(int ac, char **av, env_var_t **env)
+int main_unsetenv(int ac, char **av, env_var_t **env, env_var_t *cpy_env)
 {
+    (void) cpy_env;
     if (ac >= 2)
         return research_environement(av, env);
     if (ac < 2)

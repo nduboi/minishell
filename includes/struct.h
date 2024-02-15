@@ -17,7 +17,7 @@ typedef struct env_var {
 typedef struct my_commands {
 
     char *name;
-    int (*fct)(int ac, char **data, env_var_t **env);
+    int (*fct)(int ac, char **data, env_var_t **env, env_var_t *cpy_env);
     struct my_commands *next;
 }commands_t;
 

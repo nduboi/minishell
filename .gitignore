@@ -18,9 +18,4 @@ bonus/clients
 bonus/servers
 tests/*.sh
 tester/README
-segfault*
-div_zero*
-abort*
-dbl_free*
-send_no_core*
-no_core_dump*
+

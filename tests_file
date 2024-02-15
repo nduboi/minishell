@@ -164,7 +164,7 @@ NAME="Segmentation fault"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
-  echo "./segfault"
+  echo "tests/segfault"
 [916-END]
 
 [917]
@@ -172,7 +172,7 @@ NAME="Floating point exception"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
-  echo "./div_zero"
+  echo "tests/div_zero"
 [917-END]
 
 [918]
@@ -180,7 +180,7 @@ NAME="Abort"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
-  echo "./abort"
+  echo "tests/abort"
 [918-END]
 
 [919]
@@ -277,5 +277,21 @@ CLEAN=""
 TESTS=
   echo "setenv"
 [929-END]
+
+[930]
+NAME="Try to execute a folder not a executable file"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "/bin"
+[930-END]
+
+[931]
+NAME="Try to execute a file who's the permission are denied"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "./tests/no_exec_file"
+[931-END]
 
 

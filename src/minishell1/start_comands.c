@@ -9,16 +9,34 @@
 #include "library.h"
 #include <signal.h>
 
-static void check_core_dump(int status)
+static void core_dump(int status)
+{
+    if (139 == status)
+        write(2, "Segmentation fault (core dumped)\n", 33);
+    return;
+}
+
+static void no_core_dump(int *status)
+{
+    if (139 == *status) {
+        *status = 11;
+        write(2, "Segmentation fault (no core dumped)\n", 33);
+    }
+}
+
+static int check_core_dump(int status)
 {
     if (WIFSIGNALED(status)) {
         if (136 == status)
             write(2, "Floating exception (core dumped)\n", 33);
-        if (139 == status)
-            write(2, "Segmentation fault (core dumped)\n", 33);
+        if (WCOREDUMP(status))
+            core_dump(status);
+        else
+            no_core_dump(&status);
         if (134 == status)
-        write(2, "Abort (core dumped)\n", 20);
+            write(2, "Abort (core dumped)\n", 20);
     }
+    return status;
 }
 
 int execute_in_commands_struct(commands_t *commands, char **data,
@@ -103,7 +121,7 @@ int native_prgrm(char **data, env_var_t **env)
         status = execute_env_path(data, env);
     else {
         status = wait_pid_fork(pid);
-        check_core_dump(status);
+        status = check_core_dump(status);
     }
     return status;
 }

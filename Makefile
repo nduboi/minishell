@@ -10,6 +10,7 @@
 
 SRC	=	src/minishell1/fill_struct.c	\
 		src/minishell1/check_command.c	\
+		src/minishell1/check_if_is_a_buildintcmd.c	\
 		src/minishell1/get_pwd.c 	\
 		src/minishell1/my_str_to_word_array.c	\
 		src/env/str_to_word_array.c	\

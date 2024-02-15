@@ -56,5 +56,6 @@ int content_slash(char *src);
 int buildinprgm(char **data, commands_t *commands,
     env_var_t **env, env_var_t *cpy_env);
 int native_prgrm(char **data, env_var_t **env);
+int check_if_is_a_buildintcmd(char **data, commands_t **elements);
 
 #endif /* !MINISHELL1 */

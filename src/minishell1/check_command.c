@@ -17,19 +17,31 @@ int content_slash(char *src)
     return 0;
 }
 
-static int check_own_cmd(char *src, int *cmds)
+static int check_file(char *src, int *cmd)
 {
     struct stat buffer;
+
+    if (!(stat(src, &buffer) == -1)) {
+        if (S_ISREG(buffer.st_mode))
+            *cmd = 1;
+        else
+            return 2;
+    }
+    return 0;
+}
+
+static int check_own_cmd(char *src, int *cmds)
+{
     int cmd = 0;
 
-    if (content_slash(src))
-        if (!(stat(src, &buffer) == -1))
-            cmd = 1;
+    if (content_slash(src)) {
+        if (check_file(src, &cmd) == 2)
+            return 2;
+    }
     if (cmd == 1) {
         if (access(src, X_OK) == -1) {
-            perror("errno");
             *cmds = 0;
-            return 1;
+            return 2;
         }
         *cmds = 2;
         return 0;
@@ -89,34 +101,32 @@ static int check_internal_cmd(char *pwd, char *src, int *cmds, env_var_t *env)
 int check_commands(char *src, int *cmds, env_var_t *env)
 {
     char *pwd = malloc(sizeof(char *) * 1);
+    int status = 0;
 
-    if (my_strlen(src) >= 2)
-        if (check_own_cmd(src, cmds) == 0)
+    if (my_strlen(src) >= 2) {
+        status = check_own_cmd(src, cmds);
+        if (status == 0)
             return 0;
+        if (status == 2)
+            return 2;
+    }
     if (check_internal_cmd(pwd, src, cmds, env) == 0)
         return 0;
     return 1;
 }
 
-static void set_function(char **data, commands_t **elements)
+static void write_error_cmd(char *src, int status_error)
 {
-    if (my_strcmp(data[0], "cd") == 0)
-        (*elements)->fct = main_cd;
-    if (my_strcmp(data[0], "env") == 0)
-        (*elements)->fct = main_env;
-    if (my_strcmp(data[0], "setenv") == 0)
-        (*elements)->fct = main_setenv;
-    if (my_strcmp(data[0], "unsetenv") == 0)
-        (*elements)->fct = main_unsetenv;
-    if (my_strcmp(data[0], "exit") == 0)
-        (*elements)->fct = main_exit;
-    return;
-}
-
-static void write_error_cmd(char *src)
-{
-    write(2, src, my_strlen(src));
-    write(2, ": Command not found.\n", 21);
+    if (status_error == 1) {
+        write(2, src, my_strlen(src));
+        write(2, ": Command not found.\n", 21);
+        return;
+    }
+    if (status_error == 2) {
+        write(2, src, my_strlen(src));
+        write(2, ": Permission denied.\n", 21);
+        return;
+    }
     return;
 }
 
@@ -125,21 +135,18 @@ int check_correct_command(char **data, commands_t *commands, env_var_t **env,
 {
     commands_t *elements = commands;
     int cmds = 0;
+    int status_check = 0;
 
     (void) cpy_env;
     if (!data)
         return cmds;
     if (!data[0] || my_strcmp(data[0], "\n") == 0)
         return cmds;
-    while (elements) {
-        if (my_strcmp(data[0], elements->name) == 0) {
-            set_function(data, &elements);
-            return 1;
-        }
-        elements = elements->next;
-    }
-    if (check_commands(data[0], &cmds, *env) == 1) {
-        write_error_cmd(data[0]);
+    if (check_if_is_a_buildintcmd(data, &elements) == 1)
+        return 1;
+    status_check = check_commands(data[0], &cmds, *env);
+    if (status_check != 0) {
+        write_error_cmd(data[0], status_check);
         return 84;
     }
     return cmds;

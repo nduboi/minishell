@@ -14,7 +14,7 @@ static int execute_action(char *str, commands_t *commands,
     int cmds = 0;
     char **data = NULL;
 
-    data = my_str_to_word_array(str);
+    data = str_to_word_array(str, " \t");
     cmds = check_correct_command(data, commands, env, cpy_env);
     if (cmds == 1)
         return buildinprgm(data, commands, env, cpy_env);

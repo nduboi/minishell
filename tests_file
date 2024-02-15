@@ -202,3 +202,21 @@ TESTS=
   echo "pwd"
 [920-END]
 
+[921]
+NAME="Tabulation and space"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "  ls"
+  echo " ls"
+[921-END]
+
+[922]
+NAME="Tabulation and space"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "  ls -l -a"
+  echo " ls -l -a"
+[922-END]
+

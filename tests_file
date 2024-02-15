@@ -122,6 +122,7 @@ SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "cd zfbzfbzf"
+  echo "env"
   echo "pwd"
 [912-END]
 
@@ -132,6 +133,7 @@ CLEAN=""
 TESTS=
   echo "cd"
   echo "cd Project"
+  echo "env"
   echo "pwd"
 [913-END]
 
@@ -142,5 +144,42 @@ CLEAN=""
 TESTS=
   echo "cd fafafaffhahfhfahafhafhfhafbfhgaffh"
   echo "pwd"
+  echo "env"
   echo "exit"
 [914-END]
+
+[915]
+NAME="LAUNCH own cd - to unknow folder"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
+CLEAN=""
+TESTS=
+  echo "cd -"
+  echo "pwd"
+  echo "env"
+  echo "exit"
+[915-END]
+
+[916]
+NAME="Segmentation fault"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
+CLEAN=""
+TESTS=
+  echo "./segfault"
+[916-END]
+
+[917]
+NAME="Floating point exception"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
+CLEAN=""
+TESTS=
+  echo "./div_zero"
+[917-END]
+
+[918]
+NAME="Abort"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
+CLEAN=""
+TESTS=
+  echo "./abort"
+[918-END]
+

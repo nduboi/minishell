@@ -21,3 +21,4 @@ tester/README
 segfault*
 div_zero*
 abort*
+dbl_free*

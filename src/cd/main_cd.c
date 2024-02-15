@@ -27,9 +27,13 @@ static int handle_error(char *src, int home)
         write(2, "cd: No home directory.\n", 23);
         return 1;
     }
-    if (opendir(src) == NULL) {
+    if (opendir(src) == NULL && home != 1) {
         write(2, src, my_strlen(src));
         write(2, ": No such file or directory.\n", 29);
+        return 1;
+    }
+        if (opendir(src) == NULL && home == 1) {
+        write(2, "cd: Can't change to home directory.\n", 36);
         return 1;
     }
     return 0;

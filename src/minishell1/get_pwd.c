@@ -68,3 +68,25 @@ char *get_pwd_file(char *src, char *path, env_var_t *env)
     result[lenbase + len + 1] = '\0';
     return result;
 }
+
+char *str_cat_pwd(char *path_1, char *path_2)
+{
+    char *result = NULL;
+    int len1 = 0;
+    int len2 = 0;
+    int i = 0;
+
+    if (!path_1 || !path_2)
+        return result;
+    len1 = my_strlen(path_1);
+    len2 = my_strlen(path_2);
+    result = malloc(sizeof(char) * (len1 + len2 + 2));
+    for (; i < len1; i++) {
+        result[i] = path_1[i];
+    }
+    result[i] = '/';
+    for (i = 0; i <= len2; i++) {
+        result[len1 + i + 1] = path_2[i];
+    }
+    return result;
+}

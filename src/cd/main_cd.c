@@ -17,22 +17,41 @@ static void set_value_old_pwd(char **OLD_variables, char **PWD_variables,
     free(PWD_variables);
 }
 
-static int handle_error(char *src, int home)
+static int check_preset_folder_name(char **src, env_var_t *env)
 {
-    if (!src && home != 1) {
+    char *user_name = get_env("USER", env);
+
+    if (!user_name)
+        return 1;
+    *src = str_cat_pwd("/home", user_name);
+    if (opendir(*src) != NULL)
+        return 0;
+    free(*src);
+    *src = str_cat_pwd("/", user_name);
+    if (opendir(*src) != NULL)
+        return 0;
+    return 1;
+}
+
+static int handle_error(char **src, int home, env_var_t *env)
+{
+    if (!(*src) && home != 1) {
         write(2, ": No such file or directory.\n", 29);
         return 1;
     }
-    if (!src && home == 1) {
-        write(2, "cd: No home directory.\n", 23);
-        return 1;
+    if (!(*src) && home == 1) {
+        if (check_preset_folder_name(src, env) == 1) {
+            write(2, "cd: No home directory.\n", 23);
+            return 1;
+        } else
+            return 0;
     }
-    if (opendir(src) == NULL && home != 1) {
-        write(2, src, my_strlen(src));
+    if (opendir(*src) == NULL && home != 1) {
+        write(2, *src, my_strlen(*src));
         write(2, ": No such file or directory.\n", 29);
         return 1;
     }
-        if (opendir(src) == NULL && home == 1) {
+        if (opendir(*src) == NULL && home == 1) {
         write(2, "cd: Can't change to home directory.\n", 36);
         return 1;
     }
@@ -45,7 +64,7 @@ static int go_folder(char *src, struct env_var **env, int home)
     char **OLD_variables = fill_env_variables_oldpwd();
     char **PWD_variables = fill_env_variables_pwd();
 
-    if (handle_error(src, home) == 1)
+    if (handle_error(&src, home, *env) == 1)
         return 1;
     getcwd(buffer, (BUFFER_SIZE));
     if (buffer)

@@ -26,6 +26,7 @@ void fill_struct(commands_t **commands);
 void check_correct_command(int *cmds, char **data, commands_t *commands,
     env_var_t **env);
 char *get_pwd_file(char *src, char *path, env_var_t *env);
+char *str_cat_pwd(char *path_1, char *path_2);
 char **my_str_to_word_array(char const *str);
 char **my_str_to_word_array_pwd(char const *str);
 char **str_to_word_array(char *src, const char *separator);

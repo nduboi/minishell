@@ -17,31 +17,58 @@ static void set_value_old_pwd(char **OLD_variables, char **PWD_variables,
     free(PWD_variables);
 }
 
-static int handle_error(char *src, int home)
+static int check_preset_folder_old_env(char **src,
+    env_var_t *cpy_env)
 {
-    if (!src && home != 1) {
-        write(2, ": No such file or directory.\n", 29);
+    *src = get_env("HOME", cpy_env);
+    if (!*src)
         return 1;
-    }
-    if (!src && home == 1) {
-        write(2, "cd: No home directory.\n", 23);
-        return 1;
-    }
-    if (opendir(src) == NULL) {
-        write(2, src, my_strlen(src));
-        write(2, ": No such file or directory.\n", 29);
+    if (opendir(*src) != NULL)
+        return 0;
+    return 1;
+}
+
+static int is_home_accessible(char **src, int home)
+{
+    if (opendir(*src) == NULL && home == 1) {
+        write(2, "cd: Can't change to home directory.\n", 36);
         return 1;
     }
     return 0;
 }
 
-static int go_folder(char *src, struct env_var **env, int home)
+static int handle_error(char **src, int home,
+    env_var_t *cpy_env)
+{
+    if (!(*src) && home != 1) {
+        write(2, ": No such file or directory.\n", 29);
+        return 1;
+    }
+    if (!(*src) && home == 1) {
+        if (check_preset_folder_old_env(src, cpy_env) == 1) {
+            write(2, "cd: No home directory.\n", 23);
+            return 1;
+        } else
+            return 0;
+    }
+    if (opendir(*src) == NULL && home != 1) {
+        write(2, *src, my_strlen(*src));
+        write(2, ": No such file or directory.\n", 29);
+        return 1;
+    }
+    if (is_home_accessible(src, home) == 1)
+        return 1;
+    return 0;
+}
+
+static int go_folder(char *src, struct env_var **env, int home,
+    env_var_t *cpy_env)
 {
     char *buffer = malloc(sizeof(char) * (BUFFER_SIZE));
     char **OLD_variables = fill_env_variables_oldpwd();
     char **PWD_variables = fill_env_variables_pwd();
 
-    if (handle_error(src, home) == 1)
+    if (handle_error(&src, home, cpy_env) == 1)
         return 1;
     getcwd(buffer, (BUFFER_SIZE));
     if (buffer)
@@ -54,25 +81,25 @@ static int go_folder(char *src, struct env_var **env, int home)
     return 0;
 }
 
-int specific_cases(char **av, struct env_var **env)
+int specific_cases(char **av, struct env_var **env, env_var_t *cpy_env)
 {
     if (my_strcmp(av[1], "~") == 0)
-        return go_folder(get_env("HOME", (*env)), env, 1);
+        return go_folder(get_env("HOME", (*env)), env, 1, cpy_env);
     if (my_strcmp(av[1], "-") == 0)
-        return go_folder(get_env("1OLDPWD", (*env)), env, 0);
+        return go_folder(get_env("1OLDPWD", (*env)), env, 0, cpy_env);
     return 1;
 }
 
-int main_cd(int ac, char **av, struct env_var **env)
+int main_cd(int ac, char **av, struct env_var **env, env_var_t *cpy_env)
 {
     if (ac == 1) {
-        return go_folder(get_env("HOME", (*env)), env, 1);
+        return go_folder(get_env("HOME", (*env)), env, 1, cpy_env);
     }
     if (ac == 2) {
         if (my_strcmp(av[1], "~") != 0 && my_strcmp(av[1], "-") != 0) {
-            return go_folder(av[1], env, 0);
+            return go_folder(av[1], env, 0, cpy_env);
         } else
-            return specific_cases(av, env);
+            return specific_cases(av, env, cpy_env);
     } else
         return 1;
     return 0;

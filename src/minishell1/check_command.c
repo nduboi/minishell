@@ -120,27 +120,27 @@ static void write_error_cmd(char *src)
     return;
 }
 
-void check_correct_command(int *cmds, char **data, commands_t *commands,
-    env_var_t **env)
+int check_correct_command(char **data, commands_t *commands, env_var_t **env,
+    env_var_t *cpy_env)
 {
     commands_t *elements = commands;
+    int cmds = 0;
 
-    *cmds = 0;
+    (void) cpy_env;
     if (!data)
-        return;
+        return cmds;
     if (!data[0] || my_strcmp(data[0], "\n") == 0)
-        return;
+        return cmds;
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
             set_function(data, &elements);
-            *cmds = 1;
-            return;
+            return 1;
         }
         elements = elements->next;
     }
-    if (check_commands(data[0], cmds, *env) == 1) {
-        *cmds = 84;
+    if (check_commands(data[0], &cmds, *env) == 1) {
         write_error_cmd(data[0]);
+        return 84;
     }
-    return;
+    return cmds;
 }

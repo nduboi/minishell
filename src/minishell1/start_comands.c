@@ -22,13 +22,13 @@ static void check_core_dump(int status)
 }
 
 int execute_in_commands_struct(commands_t *commands, char **data,
-    env_var_t **env)
+    env_var_t **env, env_var_t *cpy_env)
 {
     commands_t *elements = commands;
 
     while (elements) {
         if (my_strcmp(data[0], elements->name) == 0) {
-            return (elements->fct(my_array_len(data), data, env));
+            return (elements->fct(my_array_len(data), data, env, cpy_env));
         }
         elements = elements->next;
     }
@@ -63,19 +63,6 @@ static int execute_env_path(char **data, env_var_t **env)
     return 0;
 }
 
-int execution_process(char **data, int cmds, commands_t *commands,
-    env_var_t **env)
-{
-    int status = 0;
-
-    if (cmds == 2)
-        status = execute_env_path(data, env);
-    else if (cmds == 1) {
-        status = execute_in_commands_struct(commands, data, env);
-    }
-    return status;
-}
-
 static void error_pid(void)
 {
     perror("fork");
@@ -95,24 +82,28 @@ static int wait_pid_fork(pid_t pid)
     return status;
 }
 
-int start_commands(char **data, int cmds, commands_t *commands,
-    env_var_t **env)
+int buildinprgm(char **data, commands_t *commands,
+    env_var_t **env, env_var_t *cpy_env)
+{
+    int status = 0;
+
+    status = execute_in_commands_struct(commands, data, env, cpy_env);
+    return status;
+}
+
+int native_prgrm(char **data, env_var_t **env)
 {
     pid_t pid;
     int status;
 
-    if (cmds == 2) {
-        pid = fork();
-        if (pid == -1)
-            error_pid();
-        if (pid == 0)
-            execution_process(data, cmds, commands, env);
-        else {
-            status = wait_pid_fork(pid);
-            check_core_dump(status);
-        }
+    pid = fork();
+    if (pid == -1)
+        error_pid();
+    if (pid == 0)
+        status = execute_env_path(data, env);
+    else {
+        status = wait_pid_fork(pid);
+        check_core_dump(status);
     }
-    if (cmds == 1)
-        status = execution_process(data, cmds, commands, env);
     return status;
 }

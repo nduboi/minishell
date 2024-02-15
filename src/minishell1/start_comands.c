@@ -20,7 +20,7 @@ static void no_core_dump(int *status)
 {
     if (139 == *status) {
         *status = 11;
-        write(2, "Segmentation fault (no core dumped)\n", 33);
+        write(2, "Segmentation fault\n", 19);
     }
 }
 

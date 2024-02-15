@@ -137,6 +137,10 @@ static int check_alphanum(int len, char **data)
 int main_setenv(int ac, char **av, struct env_var **env, env_var_t *cpy_env)
 {
     (void) cpy_env;
+    if (ac == 1) {
+        print_env(*env);
+        return 0;
+    }
     if (check_alphanum(ac, av) == 1) {
         write(2,
         "setenv: Variable name must contain alphanumeric characters.\n", 60);
@@ -150,7 +154,5 @@ int main_setenv(int ac, char **av, struct env_var **env, env_var_t *cpy_env)
         add_value_in_env(av, env);
         return 0;
     }
-    if (ac == 1)
-        return 0;
     return 1;
 }

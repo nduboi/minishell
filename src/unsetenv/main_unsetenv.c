@@ -39,7 +39,9 @@ int main_unsetenv(int ac, char **av, env_var_t **env, env_var_t *cpy_env)
     (void) cpy_env;
     if (ac >= 2)
         return research_environement(av, env);
-    if (ac < 2)
+    if (ac == 1) {
+        write(2, "unsetenv: Too few arguments.\n", 29);
         return 1;
+    }
     return 0;
 }

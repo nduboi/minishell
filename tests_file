@@ -183,3 +183,22 @@ TESTS=
   echo "./abort"
 [918-END]
 
+[919]
+NAME="HOME DID'NT ACCESSIBLE"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
+CLEAN=""
+TESTS=
+  echo "setenv HOME qdqdjqd"
+  echo "cd"
+[919-END]
+
+[920]
+NAME="HOME DID'NT EXIST"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "unsetenv HOME"
+  echo "cd"
+  echo "pwd"
+[920-END]
+

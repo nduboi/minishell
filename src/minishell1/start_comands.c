@@ -7,12 +7,18 @@
 
 #include "minishell1.h"
 #include "library.h"
+#include <signal.h>
 
 static void check_core_dump(int status)
 {
-    if (WIFSIGNALED(status))
-        if (WCOREDUMP(status))
-            write(2, "Segementation fault (core dumped)\n", 34);
+    if (WIFSIGNALED(status)) {
+        if (136 == status)
+            write(2, "Floating exception (core dumped)\n", 33);
+        if (139 == status)
+            write(2, "Segmentation fault (core dumped)\n", 33);
+        if (134 == status)
+        write(2, "Abort (core dumped)\n", 20);
+    }
 }
 
 int execute_in_commands_struct(commands_t *commands, char **data,
@@ -81,13 +87,11 @@ static int wait_pid_fork(pid_t pid)
     int status = 0;
 
     if (waitpid(pid, &status, WUNTRACED | WCONTINUED) == -1) {
-        my_putstr("ERROR");
         perror("waitpid");
         exit(84);
     }
-    if (WIFEXITED(status)) {
+    if (WIFEXITED(status))
         return WEXITSTATUS(status);
-    }
     return status;
 }
 

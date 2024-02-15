@@ -19,3 +19,5 @@ bonus/servers
 tests/*.sh
 tester/README
 segfault*
+div_zero*
+abort*

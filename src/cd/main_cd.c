@@ -17,50 +17,6 @@ static void set_value_old_pwd(char **OLD_variables, char **PWD_variables,
     free(PWD_variables);
 }
 
-static int check_preset_folder_old_env(char **src,
-    env_var_t *cpy_env)
-{
-    *src = get_env("HOME", cpy_env);
-    if (!*src)
-        return 1;
-    if (opendir(*src) != NULL)
-        return 0;
-    return 1;
-}
-
-static int is_home_accessible(char **src, int home)
-{
-    if (opendir(*src) == NULL && home == 1) {
-        write(2, "cd: Can't change to home directory.\n", 36);
-        return 1;
-    }
-    return 0;
-}
-
-static int handle_error(char **src, int home,
-    env_var_t *cpy_env)
-{
-    if (!(*src) && home != 1) {
-        write(2, ": No such file or directory.\n", 29);
-        return 1;
-    }
-    if (!(*src) && home == 1) {
-        if (check_preset_folder_old_env(src, cpy_env) == 1) {
-            write(2, "cd: No home directory.\n", 23);
-            return 1;
-        } else
-            return 0;
-    }
-    if (opendir(*src) == NULL && home != 1) {
-        write(2, *src, my_strlen(*src));
-        write(2, ": No such file or directory.\n", 29);
-        return 1;
-    }
-    if (is_home_accessible(src, home) == 1)
-        return 1;
-    return 0;
-}
-
 static int go_folder(char *src, struct env_var **env, int home,
     env_var_t *cpy_env)
 {
@@ -92,9 +48,8 @@ int specific_cases(char **av, struct env_var **env, env_var_t *cpy_env)
 
 int main_cd(int ac, char **av, struct env_var **env, env_var_t *cpy_env)
 {
-    if (ac == 1) {
+    if (ac == 1)
         return go_folder(get_env("HOME", (*env)), env, 1, cpy_env);
-    }
     if (ac == 2) {
         if (my_strcmp(av[1], "~") != 0 && my_strcmp(av[1], "-") != 0) {
             return go_folder(av[1], env, 0, cpy_env);

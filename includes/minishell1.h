@@ -36,6 +36,7 @@ int execution_process(char **data, int cmds, commands_t *commands,
 int start_commands_non_interactive(char **data, int cmds, commands_t *commands,
     env_var_t **env);
 int main_cd(int ac, char **av, struct env_var **env, env_var_t *cpy_env);
+int handle_error(char **src, int home, env_var_t *cpy_env);
 int main_env(int ac, char **av, struct env_var **env, env_var_t *cpy_env);
 int main_setenv(int ac, char **av, struct env_var **env, env_var_t *cpy_env);
 int main_exit(int ac, char **av, env_var_t **env, env_var_t *cpy_env);

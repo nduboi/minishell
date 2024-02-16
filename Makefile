@@ -19,6 +19,7 @@ SRC	=	src/minishell1/fill_struct.c	\
 		src/minishell1/start_comands.c	\
 		src/minishell1/non_interactive.c	\
 		src/cd/main_cd.c	\
+		src/cd/handle_error_cd.c	\
 		src/env/main_env.c	\
 		src/exit/main_exit.c	\
 		src/unsetenv/main_unsetenv.c	\

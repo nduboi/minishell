@@ -425,3 +425,46 @@ TESTS=
   echo 'exit'
   echo 'echo $?'
 [43-END]
+
+[44]
+NAME="Echo the last returned value 1"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'ls nofilehere'
+  echo 'echo $?'
+[44-END]
+
+[45]
+NAME="Echo the last returned value 2"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'ls'
+  echo 'echo $?'
+[45-END]
+
+[46]
+NAME="Echo the defined environement variable"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'setenv noa tests'
+  echo 'echo $noa'
+[46-END]
+
+[47]
+NAME="Echo the undefined environement variable"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'echo $adbadbad'
+[47-END]
+
+[48]
+NAME="Echo the first value"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'echo $?'
+[48-END]

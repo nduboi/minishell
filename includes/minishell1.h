@@ -58,5 +58,9 @@ int buildinprgm(char **data, commands_t *commands,
 int native_prgrm(char **data, env_var_t **env);
 int check_if_is_a_buildintcmd(char **data, commands_t **elements);
 char *my_stock_nbr(int nb);
+char **get_content_file(char *path);
+void add_node_env_struct(char *src, char *value, env_var_t **pos);
+char **fill_env_variables_oldpwd(void);
+char **fill_env_variables_pwd(void);
 
 #endif /* !MINISHELL1 */

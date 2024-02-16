@@ -8,28 +8,6 @@
 #include "minishell1.h"
 #include "library.h"
 
-char **fill_env_variables_oldpwd(void)
-{
-    char **env_variables = malloc(sizeof(char *) * 4);
-
-    env_variables[0] = my_strdup("setenv");
-    env_variables[1] = my_strdup("1OLDPWD");
-    env_variables[2] = NULL;
-    env_variables[3] = NULL;
-    return env_variables;
-}
-
-char **fill_env_variables_pwd(void)
-{
-    char **env_variables = malloc(sizeof(char *) * 4);
-
-    env_variables[0] = my_strdup("setenv");
-    env_variables[1] = my_strdup("PWD");
-    env_variables[2] = NULL;
-    env_variables[3] = NULL;
-    return env_variables;
-}
-
 static void add_equal(char **result, int actual, int len_max)
 {
     if (len_max >= actual + 2) {
@@ -81,13 +59,22 @@ static char *add_all(char **data)
 static void add_name_value(int len_array, env_var_t **element,
     char **table_data)
 {
-    if (len_array == 2) {
+    if (my_strcmp(table_data[0], "SHLVL") != 0 && len_array == 2) {
         (*element)->name = my_strdup(table_data[0]);
         (*element)->value = my_strdup(table_data[1]);
     }
-    if (len_array > 2) {
+    if (my_strcmp(table_data[0], "SHLVL") != 0 && len_array > 2) {
         (*element)->name = my_strdup(table_data[0]);
         (*element)->value = add_all(&table_data[1]);
+    }
+    if (my_strcmp(table_data[0], "SHLVL") == 0) {
+        if (len_array == 2) {
+            ((*element)->name) = my_strdup(table_data[0]);
+            ((*element)->value) = my_stock_nbr(my_getnbr(table_data[1]) + 1);
+        } else {
+            (*element)->name = my_strdup(table_data[0]);
+            (*element)->value = my_stock_nbr(1);
+        }
     }
     return;
 }
@@ -121,16 +108,46 @@ static void add_value_in_struct(char *src, env_var_t **env_struct)
     return;
 }
 
+char **fill_path_var(void)
+{
+    char **result = malloc(sizeof(char *) * 4);
+    char *buffer = malloc(sizeof(char) * BUFFER_SIZE);
+
+    result[0] = NULL;
+    result[1] = my_strdup("PWD");
+    if (getcwd(buffer, BUFFER_SIZE) == NULL) {
+        perror("gercwd");
+        return NULL;
+    }
+    result[2] = my_strdup(buffer);
+    return result;
+}
+
+static env_var_t *fill_with_minimum_info(env_var_t *pos)
+{
+    char **data = get_content_file("/etc/hostname");
+
+    if (data)
+        add_node_env_struct(my_strdup("HOST"), data[0], &pos);
+    add_node_env_struct(my_strdup("PWD"), (fill_path_var())[2], &pos);
+    add_node_env_struct(my_strdup("SHLVL"), my_stock_nbr(1), &pos);
+    return pos;
+}
+
 env_var_t *fill_environement(char **env)
 {
     env_var_t *env_struct = NULL;
     int len = 0;
+    char **pwd_var = fill_path_var();
 
     if (!env)
-        return env_struct;
+        return fill_with_minimum_info(env_struct);
     len = my_array_len(env);
+    if (len == 0)
+        return fill_with_minimum_info(env_struct);
     for (int i = (len - 1); i >= 0; i--) {
         add_value_in_struct(env[i], &env_struct);
     }
+    add_value_in_env(pwd_var, &env_struct);
     return env_struct;
 }

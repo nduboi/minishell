@@ -29,7 +29,8 @@ SRC	=	src/minishell1/fill_struct.c	\
 		src/env/fill_env.c	\
 		src/unsetenv/delete_node.c	\
 		src/minishell1/my_linked_list_to_table.c	\
-		src/env/my_stock_nbr.c	\
+		src/env/get_content_file.c	\
+		src/env/add_node_env.c	\
 
 FILE_MAIN =	src/main.c	\
 

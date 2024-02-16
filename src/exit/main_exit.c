@@ -14,8 +14,11 @@ int main_exit(int ac, char **av, env_var_t **env, env_var_t *cpy_env)
     if (*env != NULL)
         *env = *env;
     if (ac >= 2) {
+        my_putstr("exit\n");
         exit(my_getnbr(av[1]));
-    } else
+    } else {
+        my_putstr("exit\n");
         exit(0);
+    }
     return 0;
 }

@@ -23,6 +23,17 @@ static int execute_action(char *str, commands_t *commands,
     return cmds;
 }
 
+static int get_input(char **str, size_t *len)
+{
+    int read = 0;
+
+    if (isatty(STDIN_FILENO))
+        write(1, "$> ", 3);
+    read = getline(str, len, stdin);
+    (*str)[my_strlen(*str) - 1] = '\0';
+    return read;
+}
+
 static void wait_input_user(int read, int *cmds,
     env_var_t **env, env_var_t *cpy_env)
 {
@@ -32,19 +43,15 @@ static void wait_input_user(int read, int *cmds,
 
     fill_struct(&commands);
     *cmds = 0;
-    if (isatty(STDIN_FILENO))
-        write(1, "$> ", 3);
-    read = getline(&str, &len, stdin);
-    str[my_strlen(str) - 1] = '\0';
+    read = get_input(&str, &len);
     while (read != -1) {
         if (my_strlen(str) == 0 || (isatty(STDIN_FILENO) == 0 && *cmds == 1))
             break;
         *cmds = execute_action(str, commands, env, cpy_env);
-        if (isatty(STDIN_FILENO))
-            write(1, "$> ", 3);
-        read = getline(&str, &len, stdin);
-        str[my_strlen(str) - 1] = '\0';
+        read = get_input(&str, &len);
     }
+    if (isatty(STDIN_FILENO))
+        my_putstr("exit\n");
 }
 
 int non_interactive(env_var_t *env, env_var_t *cpy_env)

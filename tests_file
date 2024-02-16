@@ -1,37 +1,37 @@
-[901]
+[01]
 NAME="Nothing"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo ''
-[901-END]
+[01-END]
 
-[902]
+[02]
 NAME="Exec two command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo 'ls /etc'
   echo 'cat /etc/resolv.conf'
-[902-END]
+[02-END]
 
-[903]
+[03]
 NAME="Testing with /usr/bin PATH"
 SETUP="export TERM=xterm ; PATH='/usr/bin'"
 CLEAN=""
 TESTS=
   echo 'pwd'
-[903-END]
+[03-END]
 
-[904]
+[04]
 NAME="Testing with /bin PATH"
 SETUP="export TERM=xterm ; PATH='/bin'"
 CLEAN=""
 TESTS=
   echo 'pwd'
-[904-END]
+[04-END]
 
-[905]
+[05]
 NAME="run commands"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
@@ -41,9 +41,9 @@ TESTS=
   echo 'ls -l /etc'
   sleep 0.5
   echo 'pwd'
-[905-END]
+[05-END]
 
-[906]
+[06]
 NAME="setenv and unsetenv"
 SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
 CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
@@ -68,9 +68,9 @@ TESTS=
   echo '/usr/bin/env'
   echo 'setenv var1 val1'
   echo 'setenv var2 val2'
-[906-END]
+[06-END]
 
-[907]
+[07]
 NAME="builtin cd"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
@@ -79,34 +79,26 @@ TESTS=
   echo 'ls -l'
   echo 'cd /usr'
   echo 'ls -l'
-[907-END]
+[07-END]
 
-[908]
+[08]
 NAME="many tab and space"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo -e "\t\t    ls\t     \t-l    \t\t  \t -a /usr   \t\t"
-[908-END]
+[08-END]
 
-[909]
-NAME="Launch DivZero program with core dump"
-SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
-CLEAN=""
-TESTS=
-  echo "./my_divzero"
-[909-END]
-
-[910]
+[10]
 NAME="LAUNCH own cd empty command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "cd"
   echo "pwd"
-[910-END]
+[10-END]
 
-[911]
+[11]
 NAME="LAUNCH own cd - command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
@@ -114,9 +106,9 @@ TESTS=
   echo "cd"
   echo "cd -"
   echo "pwd"
-[911-END]
+[11-END]
 
-[912]
+[12]
 NAME="LAUNCH own cd to unknow command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
@@ -124,9 +116,9 @@ TESTS=
   echo "cd zfbzfbzf"
   echo "env"
   echo "pwd"
-[912-END]
+[12-END]
 
-[913]
+[13]
 NAME="LAUNCH own cd to folder command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
@@ -135,9 +127,9 @@ TESTS=
   echo "cd Project"
   echo "env"
   echo "pwd"
-[913-END]
+[13-END]
 
-[914]
+[14]
 NAME="LAUNCH own cd to unknow command and try to execute another command"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
@@ -146,9 +138,9 @@ TESTS=
   echo "pwd"
   echo "env"
   echo "exit"
-[914-END]
+[14-END]
 
-[915]
+[15]
 NAME="LAUNCH own cd - to unknow folder"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
@@ -157,42 +149,42 @@ TESTS=
   echo "pwd"
   echo "env"
   echo "exit"
-[915-END]
+[15-END]
 
-[916]
+[16]
 NAME="Segmentation fault"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "tests/segfault"
-[916-END]
+[16-END]
 
-[917]
+[17]
 NAME="Floating point exception"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "tests/div_zero"
-[917-END]
+[17-END]
 
-[918]
+[18]
 NAME="Abort"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "tests/abort"
-[918-END]
+[18-END]
 
-[919]
+[19]
 NAME="HOME DID'NT ACCESSIBLE"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin' ;  HOME='/home/roussierenoa'"
 CLEAN=""
 TESTS=
   echo "setenv HOME qdqdjqd"
   echo "cd"
-[919-END]
+[19-END]
 
-[920]
+[20]
 NAME="HOME DID'NT EXIST"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
@@ -200,98 +192,236 @@ TESTS=
   echo "unsetenv HOME"
   echo "cd"
   echo "pwd"
-[920-END]
+[20-END]
 
-[921]
+[21]
 NAME="Tabulation and space"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "  ls"
   echo " ls"
-[921-END]
+[21-END]
 
-[922]
+[22]
 NAME="Tabulation and space"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "  ls -l -a"
   echo " ls -l -a"
-[922-END]
+[22-END]
 
-[923]
+[23]
 NAME="Setenv normal"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "setenv noa noa"
-[923-END]
+[23-END]
 
-[924]
+[24]
 NAME="Setenv with one argument"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "setenv noa"
-[924-END]
+[24-END]
 
-[925]
+[25]
 NAME="Setenv with a lot of argument"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "setenv noa noa noa noa noa"
-[925-END]
+[25-END]
 
-[926]
+[26]
 NAME="unsetenv with one argument correct"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "setenv noa"
   echo "unsetenv noa"
-[926-END]
+[26-END]
 
-[927]
+[27]
 NAME="unsetenv with one argument incorrect"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "setenv noa"
   echo "unsetenv nqqdqdoa"
-[927-END]
+[27-END]
 
-[928]
+[28]
 NAME="unsetenv with nothing"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "unsetenv"
-[928-END]
+[28-END]
 
-[929]
+[29]
 NAME="setenv with nothing (Error normal, env different btw tcsh and mysh) check_output and exit message !"
-SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
-CLEAN=""
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
 TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
   echo "setenv"
-[929-END]
+[29-END]
 
-[930]
+[30]
 NAME="Try to execute a folder not a executable file"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "/bin"
-[930-END]
+[30-END]
 
-[931]
+[31]
 NAME="Try to execute a file who's the permission are denied"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo "./tests/no_exec_file"
-[931-END]
+[31-END]
 
+[32]
+NAME="Exit"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 45'
+[32-END]
 
+[33]
+NAME="cd home"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd'
+  echo 'pwd'
+[33-END]
+
+[34]
+NAME="cd minus"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd'
+  echo 'cd -'
+  echo 'pwd'
+[34-END]
+
+[35]
+NAME="touch / mkdir"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'mkdir newdir'
+  echo 'cd newdir'
+  echo 'touch newfile'
+  echo 'touch Newfile'
+  echo 'touch aewfile'
+  echo 'touch Aewfile'
+  echo 'touch zewfile'
+  echo 'touch Zewfile'
+  echo 'pwd'
+  echo 'ls -l'
+  echo 'rm newfile'
+  echo 'rm Newfile'
+  echo 'rm aewfile'
+  echo 'rm Aewfile'
+  echo 'rm zewfile'
+  echo 'rm Zewfile'
+  echo 'cd ..'
+  echo 'rmdir newdir'
+[35-END]
+
+[36]
+NAME="cd error"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+  echo 'cd ezmlivypimgeaouvgzjv'
+[36-END]
+
+[37]
+NAME="cd error 2"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ezmlivypimgeaouvgzjv'
+[37-END]
+
+[38]
+NAME="exit error"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit blablzoeuy'
+  echo 'exit 3 ezouvẑo'
+[38-END]
+
+[39]
+NAME="exit error 2"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'exit 3 ezouvẑo'
+[39-END]
+
+[40]
+NAME="sub-sub-shell"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'bash'
+  echo 'exit 3'
+  echo 'echo $?'
+[40-END]
+
+[41]
+NAME="sub-sub-shell 2"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'tcsh'
+  echo 'exit 3'
+  echo 'echo $?'
+[41-END]
+
+[42]
+NAME="sub-sub-shell 3"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo './mysh'
+  echo 'exit 3'
+  echo 'echo $?'
+[42-END]
+
+[43]
+NAME="sub-sub-shell 4"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo './mysh'
+  echo 'exit'
+  echo 'echo $?'
+[43-END]

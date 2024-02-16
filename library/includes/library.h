@@ -20,5 +20,6 @@ int my_puterror(char const *str);
 int my_strcmp(const char *first, const char *second);
 char *my_strdup(char *src);
 int my_strlen(char const *str);
+char *my_stock_nbr(int nb);
 
 #endif /* !MY_H_ */

@@ -12,6 +12,7 @@ SRC =	src/my_array_len.c	\
 		src/my_strcmp.c	\
 		src/my_strdup.c	\
 		src/my_strlen.c	\
+		src/my_stock_nbr.c	\
 
 OBJ = $(SRC:.c=.o)
 
